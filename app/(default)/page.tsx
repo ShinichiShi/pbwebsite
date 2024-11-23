@@ -16,7 +16,6 @@ import "../css/additional-styles/landing.css";
 import Activities from "@/components/activities";
 import Image from "next/image";
 import SparklesText from "@/components/magicui/sparkles-text";
-import EventComponent from "@/components/eventcards";
 import Achievements from '@/components/achievements';
 import Founder from "@/components/founder";
 import Share from "@/components/share";
@@ -51,8 +50,6 @@ export default function Home() {
       </div>
       <Founder />
       <Achievements />
-      <EventComponent />
-      
       <Share />
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-100 mt-2 p-2">
