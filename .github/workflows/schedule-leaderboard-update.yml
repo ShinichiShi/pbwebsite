@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Trigger API to Update Leaderboard
         run: |
-          response=$(curl -X POST -s -w "%{http_code}" "https://pointblank.club/api/hustle")
+          response=$(curl -X POST -s -L -w "%{http_code}" "https://pointblank.club/api/hustle")
           if [ "${response: -3}" != "200" ]; then
             echo "API call failed with status: ${response: -3}"
             exit 1
