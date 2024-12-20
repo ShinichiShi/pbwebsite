@@ -2,7 +2,7 @@ name: Update Leaderboard Every Friday
 
 on:
   schedule:
-    - cron: "30 13 * * 5"
+    - cron: "46 19 * * 5"
 
 jobs:
   update-leaderboard:
