@@ -1,4 +1,4 @@
-
+export const notificationData = [];
   export const achievementJson = [
     {
       id: 1,
