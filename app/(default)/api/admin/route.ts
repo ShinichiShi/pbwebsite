@@ -50,7 +50,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const { email, role, userId } = await request.json();
 
-  // Validate required fields
+  // Validate required field
   if (!email || !role || !userId) {
     return NextResponse.json(
       { error: "Email, role, and userId are required" },
