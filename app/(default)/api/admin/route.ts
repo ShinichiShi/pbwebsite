@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const { email, role, userId } = await request.json();
-  //test
+
   // Validate required fields
   if (!email || !role || !userId) {
     return NextResponse.json(
