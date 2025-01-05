@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import connectMongoDB from "@/lib/dbConnect";
 import Achievementmodel from "@/models/Achievements";
-import { storage } from "@/Firebase";
 import { cloudinary } from "@/Cloudinary";
 import { Readable } from "stream";
 import { UploadApiResponse } from "cloudinary";
@@ -33,7 +30,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Handle image upload to Firebase Storage
+    // Handle image upload to Cloudinary Storage
     if (!image) {
       return NextResponse.json(
         { error: "Image file is required" },
@@ -165,9 +162,32 @@ export async function PUT(request: Request) {
 
     // Handle image upload if a new image is provided
     if (image) {
-      const storageRef = ref(storage, `images/${image.name}`);
-      await uploadBytes(storageRef, image);
-      imageUrl = await getDownloadURL(storageRef);
+      // Convert the uploaded file (File object) to a Buffer
+      const arrayBuffer = await image.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Create a readable stream from the Buffer
+      const stream = Readable.from(buffer);
+
+      // Upload the image to Cloudinary
+      const uploadResult: UploadApiResponse = await new Promise(
+        (resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "achivements", public_id: name }, // Specify folder and use `name` for the file name
+            (error, result) => {
+              if (error || !result) {
+                reject(error); // Handle upload errors
+              } else {
+                resolve(result); // Resolve with the upload result
+              }
+            }
+          );
+
+          // Pipe the readable stream into the Cloudinary upload stream
+          stream.pipe(uploadStream);
+        }
+      );
+      imageUrl = uploadResult.secure_url;
     }
 
     // Update the member data

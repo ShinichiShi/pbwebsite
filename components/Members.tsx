@@ -105,7 +105,7 @@ export default function Members() {
 
       // Handling image URL upload if it's a blob
       if (newMember.imageUrl && newMember.imageUrl.startsWith("blob")) {
-        console.log("Image file detected, uploading to Firebase Storage...");
+        console.log("Image file detected, uploading to Cloudinary Storage...");
         const formData = new FormData();
         formData.append("file", image as Blob);
         formData.append("name", newMember.name);
