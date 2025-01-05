@@ -2,16 +2,8 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 // import { JSDOM } from "jsdom";
 import puppeteer from "puppeteer";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
-import { app } from "@/Firebase";
 import connectMongoDB from "@/lib/dbConnect";
-import PbhustleModel from "@/models/PbHustel"; 
+import PbhustleModel from "@/models/PbHustel";
 
 interface ContestRanking {
   rank: number;
@@ -35,7 +27,6 @@ interface LeaderboardData {
 export async function POST() {
   try {
     console.log("Initializing mongodb connection.");
-    await connectMongoDB()
 
     const API_URL =
       process.env.VJUDGE_CONTEST_API ||
@@ -51,9 +42,8 @@ export async function POST() {
     const url = `https://vjudge.net/contest/${ccode}#rank`;
     console.log(`Contest URL: ${url}`);
 
-    
     console.log("Fetching existing leaderboard data from Firestore.");
-    const leaderboardDoc = await PbhustleModel.findOne({name:"leaderboard"})
+    const leaderboardDoc = await PbhustleModel.findOne({ name: "leaderboard" });
 
     const existingData = leaderboardDoc as LeaderboardData | undefined;
     console.log("Existing leaderboard data:", existingData);
@@ -96,10 +86,10 @@ export async function POST() {
 
     console.log("Updating latest contest results in Firestore.");
     await PbhustleModel.findOneAndUpdate({
-      name:"latest",
+      name: "latest",
       results: latest,
       updateTime: new Date(),
-  });
+    });
 
     let rankings: LeaderboardUser[] = existingData?.rankings || [];
     console.log("Existing rankings:", rankings);
@@ -132,7 +122,7 @@ export async function POST() {
     console.log("Final rankings:", rankings);
     console.log("Updating leaderboard in Firestore.");
     await PbhustleModel.findOneAndUpdate({
-      name:"leaderboard",
+      name: "leaderboard",
       rankings,
       updatedAt: new Date(),
       lastContestCode: ccode,
@@ -150,11 +140,10 @@ export async function POST() {
 
 export async function GET() {
   try {
-    await connectMongoDB()
     console.log("Fetching latest contest results from Firestore.");
-    const latestDoc = await PbhustleModel.findOne({name:"latest"})
+    const latestDoc = await PbhustleModel.findOne({ name: "latest" });
     console.log("Fetching leaderboard data from Firestore.");
-    const leaderboardDoc = await PbhustleModel.findOne({name:"leaderboard"})
+    const leaderboardDoc = await PbhustleModel.findOne({ name: "leaderboard" });
 
     console.log("Fetched data successfully:", {
       latest: latestDoc,

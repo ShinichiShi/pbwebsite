@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FaRegBell, FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/Firebase";
 import Image from "next/image";
