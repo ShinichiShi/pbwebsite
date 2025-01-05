@@ -1,4 +1,5 @@
 import { db } from "@/Firebase";
+import connectMongoDB from "@/lib/dbConnect";
 
 import {
   addDoc,
@@ -12,6 +13,7 @@ import { NextResponse } from "next/server";
 
 //Check if USN exists
 export async function GET(request: Request) {
+  await connectMongoDB();
   try {
     const { searchParams } = new URL(request.url);
     const usn = searchParams.get("usn");

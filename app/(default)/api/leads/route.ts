@@ -38,6 +38,7 @@ function validateLeadData(leadData: any): string | null {
 
 export async function GET(request: Request) {
   try {
+    await connectMongoDB();
     const leads = await Leadsmodel.find();
     const currentLeads: Lead[] = [];
     const alumniLeads: Lead[] = [];

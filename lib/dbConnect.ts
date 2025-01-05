@@ -22,6 +22,5 @@ async function connectMongoDB(): Promise<void> {
     process.exit(0);
   }
 }
-await connectMongoDB();
 
 export default connectMongoDB;

@@ -7,6 +7,7 @@ import { ObjectId } from "mongodb";
 // GET handler to retrieve all members
 export async function GET() {
   try {
+    await connectMongoDB();
     const querySnapshot = await Membersmodel.find();
     const members = querySnapshot.map((member: any) => ({
       id: member.id,
