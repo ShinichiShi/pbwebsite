@@ -20,20 +20,23 @@ export default function ResultsTable() {
   const [rankings, setRankings] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/hustle");
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (response.ok && data?.data) {
           const allDocs = data.data;
           const latestData: Result[] = allDocs.latest.results || [];
           const rankingsData: Result[] = allDocs.leaderboard.rankings || [];
+          const updatedAt: Date = new Date(allDocs.leaderboard.updatedAt);
 
           setLatestResults(latestData);
           setRankings(rankingsData);
+          setLastUpdated(updatedAt);
         } else {
           console.error("Error in response:", data.error);
         }
@@ -96,20 +99,6 @@ export default function ResultsTable() {
     }
   };
 
-  // const renderConsistency = (consistency?: number[]) => {
-  //   if (!consistency) return "N/A";
-
-  //   return consistency.map((value, index) => (
-  //     <span
-  //       key={index}
-  //       className="mx-1"
-  //       style={{ color: value === 1 ? "#00C853" : "red" }}
-  //     >
-  //       {value === 1 ? "✓" : "✗"}
-  //     </span>
-  //   ));
-  // };
-
   const renderTable = (data: Result[], showConsistency: boolean) => (
     <div className="overflow-x-auto shadow-xl rounded-xl border border-gray-700">
       <table className="w-full text-sm text-left text-gray-300">
@@ -154,7 +143,6 @@ export default function ResultsTable() {
           </p>
         </motion.header>
 
-        
         <div className="flex justify-center space-x-6 mb-8">
           {(["latest", "rankings"] as const).map((tabName) => (
             <button
@@ -198,10 +186,17 @@ export default function ResultsTable() {
             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#00FF66]"></div>
           </div>
         ) : (
-          renderTable(
-            tab === "latest" ? latestResults : rankings,
-            tab === "rankings"
-          )
+          <>
+            {lastUpdated && (
+              <div className="text-center mb-4 text-white">
+                Last updated: {lastUpdated.toLocaleString()}
+              </div>
+            )}
+            {renderTable(
+              tab === "latest" ? latestResults : rankings,
+              tab === "rankings"
+            )}
+          </>
         )}
       </div>
     </div>
