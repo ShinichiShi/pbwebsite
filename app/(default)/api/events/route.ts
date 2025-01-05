@@ -66,7 +66,9 @@ const validateEvent = (event: any) => {
 
 // GET request
 export async function GET(request: Request) {
+  await connectMongoDB();
   try {
+    
     const eventSnapshot = await Eventmodel.find();
     const eventsList = eventSnapshot.map((event: any) => ({
       id: event.id,

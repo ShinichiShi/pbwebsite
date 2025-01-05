@@ -3,10 +3,12 @@ import Achievementmodel from "@/models/Achievements";
 import { cloudinary } from "@/Cloudinary";
 import { Readable } from "stream";
 import { UploadApiResponse } from "cloudinary";
+import connectMongoDB from "@/lib/dbConnect";
 
 // POST method: Create or add a new achievement
 export async function POST(request: Request) {
   try {
+    await connectMongoDB();
     const formData = await request.formData();
 
     // Extract data from the form

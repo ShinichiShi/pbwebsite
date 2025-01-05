@@ -1,4 +1,5 @@
 import { db } from "@/Firebase";
+import connectMongoDB from "@/lib/dbConnect";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
@@ -6,6 +7,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export async function GET(request: Request) {
   try {
+    await connectMongoDB();
     const { searchParams } = new URL(request.url);
     const uid = searchParams.get("uid");
 
