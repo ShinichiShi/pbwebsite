@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+
+    "dev": "node -r dotenv/config ./node_modules/.bin/next",
+    "build": "node -r dotenv/config ./node_modules/.bin/next build",
+    "start": "node -r dotenv/config ./node_modules/.bin/next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "cobe": "^0.6.3",
     "cookie": "^0.7.0",
     "csrf": "^3.1.0",
+    "dotenv": "^16.4.7",
     "edge-csrf": "^2.0.0-rc7",
     "firebase": "^10.14.1",
     "framer-motion": "^11.11.10",
