@@ -15,7 +15,6 @@ import Domains from "@/components/domains";
 import "../css/additional-styles/landing.css";
 import Activities from "@/components/activities";
 import Image from "next/image";
-import SparklesText from "@/components/magicui/sparkles-text";
 import Achievements from '@/components/achievements';
 import Founder from "@/components/founder";
 import Share from "@/components/share";
