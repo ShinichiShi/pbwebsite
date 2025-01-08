@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 // import { JSDOM } from "jsdom";
 import puppeteer from "puppeteer";
-
 import connectMongoDB from "@/lib/dbConnect";
 import { LatestModel, LeaderboardModel } from "@/models/PbHustel";
 
