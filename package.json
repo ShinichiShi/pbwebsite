@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
 
-    "dev": "node -r dotenv/config ./node_modules/.bin/next",
-    "build": "node -r dotenv/config ./node_modules/.bin/next build",
-    "start": "node -r dotenv/config ./node_modules/.bin/next start",
-    "lint": "next lint"
+    "dev": "infisical run -- next dev",
+    "build": "infisical run -- next build",
+    "start": "infisical run -- next start",
+    "lint": "infisical run -- next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.9.6",
