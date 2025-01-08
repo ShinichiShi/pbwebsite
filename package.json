@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-
     "dev": "infisical run -- next dev",
     "build": "infisical run -- next build",
     "start": "infisical run -- next start",
@@ -59,6 +58,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@infisical/cli": "^0.33.0",
     "@tailwindcss/forms": "^0.5.7",
     "@types/aos": "^3.0.7",
     "@types/canvas-confetti": "^1.6.4",
