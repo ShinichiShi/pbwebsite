@@ -41,7 +41,3 @@ next-env.d.ts
 
 # include package-lock.json
 !/package-lock.json
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
