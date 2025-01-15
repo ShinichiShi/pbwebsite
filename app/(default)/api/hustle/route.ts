@@ -45,7 +45,9 @@ export async function POST() {
     console.log(`Contest URL: ${url}`);
 
     console.log("Fetching existing leaderboard data from Firestore.");
-    const leaderboardDoc = await LeaderboardModel.findOne({ name: "leaderboard" });
+    const leaderboardDoc = await LeaderboardModel.findOne({
+      name: "leaderboard",
+    });
 
     const existingData = leaderboardDoc as LeaderboardData | undefined;
     console.log("Existing leaderboard data:", existingData);
@@ -156,7 +158,9 @@ export async function GET() {
     console.log("Fetching latest contest results from Firestore.");
     const latestDoc = await LatestModel.findOne({ name: "latest" });
     console.log("Fetching leaderboard data from Firestore.");
-    const leaderboardDoc = await LeaderboardModel.findOne({ name: "leaderboard" });
+    const leaderboardDoc = await LeaderboardModel.findOne({
+      name: "leaderboard",
+    });
 
     console.log("Fetched data successfully:", {
       latest: latestDoc,
