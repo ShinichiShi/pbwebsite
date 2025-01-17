@@ -56,7 +56,7 @@ export default function Home() {
           Website <span className="text-green-500">Contributors:</span>
         </h1>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px] relative z-10">
         {/* Pin item */}
         <PinContainer
   title="Visit Linkedin"
