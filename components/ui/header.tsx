@@ -54,6 +54,11 @@ export default function Header() {
                 </Link>
               </li>
               <li>
+                <Link href="https://blog.pointblank.club">
+                  <p className={`font-medium ${pathname === '/blog' ? 'font-extrabold text-white' : 'text-gray-300'} hover:text-white px-2 lg:px-5 py-3 flex items-center transition duration-150 ease-in-out`}>Blog</p>
+                </Link>
+              </li>
+              <li>
                 <Link href="/leads">
                   <p className={`font-medium ${pathname === '/leads' ? 'font-extrabold text-white' : 'text-gray-300'} hover:text-white px-2 lg:px-5 py-3 flex items-center transition duration-150 ease-in-out`}>Leads</p>
                 </Link>
