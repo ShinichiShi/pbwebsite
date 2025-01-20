@@ -87,7 +87,7 @@ export default function Share() {
               <div className="mt-4">
                 <a
                   className="btn-sm px-4 py-2 text-l font-bold text-white bg-gradient-to-tr from-cyan-500 to-blue-500 mx-3 rounded-xl inline-block"
-                  href="https://www.instagram.com/pointblank_dsce/"
+                  href="https://blog.pointblank.club"
                 >
                   Read Now
                 </a>
