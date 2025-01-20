@@ -72,7 +72,7 @@ export default function Share() {
             <div className="bg-gradient-to-tr from-cyan-500 to-blue-500 p-6 rounded-lg shadow-md text-white rounded-xl flex flex-col h-full">
               <div className="flex justify-start mb-4">
                 <Image
-                  src="https://img.icons8.com/ios-filled/50/blog.png"
+                  src="https://img.icons8.com/ios/50/FFFFFF/blog.png"
                   alt="Blog Logo"
                   width={50}
                   height={50}
