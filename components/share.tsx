@@ -1,6 +1,10 @@
+/** @jsxImportSource react */
+import React from "react";
 import Image from "next/image"; // Assuming you are using next/image for optimization
 
-export default function Share() {
+interface ShareProps {}
+
+const Share: React.FC<ShareProps> = () => {
   return (
     <section className="py-12">
       <div className="text-center mb-12">
@@ -9,7 +13,6 @@ export default function Share() {
         </h1>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {/* All cards in a single grid */}
           <div className="w-full max-w-md">
@@ -96,8 +99,8 @@ export default function Share() {
             </div>
           </div>
 
-          <div className="w-full max-w-md lg:col-start-2">
-            {/* Card 4 - Brochure */}
+          {/* Card 4 - Brochure */}
+          <div className="w-full max-w-md">
             <div className="bg-gradient-to-tr from-green-500 to-green-300 p-6 rounded-lg shadow-md text-white rounded-xl flex flex-col h-full">
               <div className="flex justify-start mb-4">
                 <p className="text-2xl font-bold">📄 Brochure </p>
@@ -116,25 +119,51 @@ export default function Share() {
                 </a>
               </div>
             </div>
+          </div>
 
-          {/* Card 4  */}
-          <div className="bg-gradient-to-tr from-purple-500 to-purple-300 p-6 shadow-md text-white rounded-xl md:col-span-1 md:col-start-2">
-            <div className="flex justify-start mb-4">
-              <p className="text-2xl font-bold mb-2"> Youtube </p>
-            </div>
-            <h3 className="text-lg font-bold mb-2">Jam to Our Latest Mixtape!</h3>
-            <p>
-              We include all the tracks, vibes, and energy of our mixtapes - Check it out now!.
-            </p>
-            <a
-              className="btn-sm px-4 py-2 text-l font-bold bg-gradient-to-tr from-purple-500 to-purple-300 mx-3 rounded-xl mt-10"
-              href="https://www.youtube.com/watch?v=2vk-hb0quBg&list=PLrHlqWSNnbvTMbGsDrM3Uu_p2o-x4BfSn"
+          {/* Card 5 - Youtube */}
+          <div className="w-full max-w-md">
+            <div 
+              className="relative p-6 rounded-lg shadow-md text-white rounded-xl flex flex-col h-full overflow-hidden"
+              style={{
+                backgroundImage: `url(https://res.cloudinary.com/pbsite/image/upload/c_thumb,w_200,g_face/v1737399749/WhatsApp_Image_2025-01-14_at_11.24.24_k3xyj5.jpg)`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
             >
-              Tune In
-            </a>
+              {/* Blur overlay */}
+              <div className="absolute inset-0 backdrop-blur-sm bg-black/50"></div>
+              
+              {/* Content */}
+              <div className="relative z-10">
+                <div className="flex justify-start mb-4">
+                  <Image
+                    src="https://img.icons8.com/color/48/youtube-play.png"
+                    alt="YouTube Logo"
+                    width={48}
+                    height={48}
+                    className="object-contain"
+                  />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Jam to Our Latest Mixtape!</h3>
+                <p className="flex-grow">
+                  We include all the tracks, vibes, and energy of our mixtapes - Check it out now!
+                </p>
+                <div className="mt-4">
+                  <a
+                    className="btn-sm px-4 py-2 text-l font-bold bg-black/30 hover:bg-black/50 mx-3 rounded-xl inline-block"
+                    href="https://www.youtube.com/watch?v=2vk-hb0quBg&list=PLrHlqWSNnbvTMbGsDrM3Uu_p2o-x4BfSn"
+                  >
+                    Tune In
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+export default Share;
