@@ -41,7 +41,7 @@ export default function Carousel({ slides }) {
         })}
       </div>
 
-      <div className="absolute top-0 h-full w-full justify-between items-center flex text-white px-10 text-3xl opacity-0 hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute top-0 h-full w-full justify-between items-center flex text-white px-10 text-3xl opacity-0 hover:opacity-40 transition-opacity duration-300">
         <button onClick={previousSlide}>
           <BsFillArrowLeftCircleFill />
         </button>
@@ -58,7 +58,7 @@ export default function Carousel({ slides }) {
                 setCurrent(i);
               }}
               key={"circle" + i}
-              className={`rounded-full w-5 h-5 cursor-pointer  ${
+              className={`rounded-full w-2 h-2 cursor-pointer  ${
                 i == current ? "bg-white" : "bg-gray-500"
               }`}
             ></div>
