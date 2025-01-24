@@ -114,7 +114,7 @@ export async function POST() {
       rankings: leaderboardRankings,
     });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to update leaderboard" });
+    return NextResponse.json({ error});
   }
 }
 
