@@ -123,7 +123,6 @@ export default function PinPage() {
     setShowEditIcons((prev) => !prev);
   };
 
-
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 mt-14 mb-6">
@@ -190,11 +189,11 @@ export default function PinPage() {
 
       {/* Grid container */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px] items-start">
         {!isLoading &&
           !error &&
           contributors.map((contributor) => (
-            <div className="relative" key={contributor._id}>
+            <div className="relative flex flex-col items-center" key={contributor._id}>
               {/* PinContainer */}
               <PinContainer
                 title="Visit Linkedin"
@@ -215,9 +214,9 @@ export default function PinPage() {
                       <h3 className="font-bold text-base text-slate-100">
                         {contributor.name}
                       </h3>
-                      <p className="text-base text-slate-300 mt-2">
+                      {/* <p className="text-base text-slate-300 mt-2">
                         {contributor.description}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>
@@ -254,7 +253,7 @@ export default function PinPage() {
           ))}
       </div>
 
-      {isAdmin && (
+      {/* {isAdmin && ( */}
         <div className="w-full flex justify-center mt-10">
           <button
             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition"
@@ -270,7 +269,7 @@ export default function PinPage() {
             Edit
           </button>
         </div>
-      )}
+      {/* )} */}
     </div>
   );
 }
