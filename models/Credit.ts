@@ -2,6 +2,7 @@ import mongoose , {Schema , Document , Model, mongo } from 'mongoose';
 
 export interface ICredit extends Document {
     name: string;
+    userId: Number;
     imageUrl: string;
     githubUrl: string;
     publicId: string;
@@ -14,6 +15,9 @@ const CreditSchema: Schema = new Schema<ICredit>(
         name: {
             type: String,
             required: true
+        },
+        userId: {
+            type: Number,
         },
         imageUrl: {
             type: String,
