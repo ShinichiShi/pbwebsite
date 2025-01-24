@@ -37,7 +37,7 @@ export default function Carousel({ slides }) {
         }}
       >
         {slides.map((s, idx) => {
-          return <Image src={s} alt="" width={500} height={500} className="items-center" key={idx} />;
+          return <Image src={s} alt="" width={500} height={500} className="items-center rounded-xl" key={idx} />;
         })}
       </div>
 
