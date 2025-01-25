@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
             const { id , name , login , avatar_url , html_url } = contributor;
             const contributorName = name || login;
 
-            const existingCredit = await Credit.findOne({userId: id});
+            const existingCredit = await Credit.findOne({name: login});
             if(existingCredit) {
               continue;
             }

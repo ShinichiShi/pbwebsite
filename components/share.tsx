@@ -1,10 +1,12 @@
 /** @jsxImportSource react */
 import React from "react";
 import Image from "next/image"; // Assuming you are using next/image for optimization
+import { ContributorsBtn } from "./ContributorsBtn";
 
 interface ShareProps {}
 
 const Share: React.FC<ShareProps> = () => {
+
   return (
     <section className="py-12">
       <div className="text-center mb-12">
@@ -182,12 +184,7 @@ const Share: React.FC<ShareProps> = () => {
                 with their dedication and hard work.
               </p>
               <div className="mt-4">
-                <a
-                  className="btn-sm px-4 py-2 text-l font-bold text-white bg-gradient-to-tr from-gray-900 to-indigo-800 mx-3 rounded-xl inline-block"
-                  href="/Credits"
-                >
-                  View Credits
-                </a>
+                <ContributorsBtn />
               </div>
             </div>
           </div>
