@@ -1,7 +1,7 @@
-import Carousel from "./carousel.component";
 import { cn } from "@/lib/server/utils";
 import HyperText from "./magicui/hyper-text";
 import Image from "next/image";
+import Carousel from "@/components/carousel.component";
 
 interface ActivityCardProps {
     LeftAligned: boolean;
@@ -47,7 +47,11 @@ export default function ActivityCard({...props}: ActivityCardProps) {
 
             <div className="highlight flex-6 my-auto px-4 sm:px-8">
                 <div className="highlight w-full h-64 sm:w-96 sm:h-96 flex items-center justify-center bg-black-900">
-                <Carousel slides={props.ImageSrc}/>
+                <Carousel 
+                    slides={props.ImageSrc}
+                    useScrollHoverEffects={true}
+                    className="ActivityCard"
+                />
                 </div>
             </div>
         </div>
