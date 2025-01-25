@@ -19,7 +19,6 @@ import SparklesText from "@/components/magicui/sparkles-text";
 import Achievements from '@/components/achievements';
 import Founder from "@/components/founder";
 import Share from "@/components/share";
-import CreditComp from "@/components/CreditComp";
 
 export default function Home() {
   return (
@@ -52,7 +51,6 @@ export default function Home() {
       <Founder />
       <Achievements />
       <Share />
-      <CreditComp />
     </>
   );
 }

@@ -123,17 +123,17 @@ const Share: React.FC<ShareProps> = () => {
 
           {/* Card 5 - Youtube */}
           <div className="w-full max-w-md">
-            <div 
+            <div
               className="relative p-6 rounded-lg shadow-md text-white rounded-xl flex flex-col h-full overflow-hidden"
               style={{
                 backgroundImage: `url(https://res.cloudinary.com/pbsite/image/upload/c_thumb,w_200,g_face/v1737399749/WhatsApp_Image_2025-01-14_at_11.24.24_k3xyj5.jpg)`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
             >
               {/* Blur overlay */}
               <div className="absolute inset-0 backdrop-blur-sm bg-black/50"></div>
-              
+
               {/* Content */}
               <div className="relative z-10">
                 <div className="flex justify-start mb-4">
@@ -145,9 +145,12 @@ const Share: React.FC<ShareProps> = () => {
                     className="object-contain"
                   />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Jam to Our Latest Mixtape!</h3>
+                <h3 className="text-lg font-bold mb-2">
+                  Jam to Our Latest Mixtape!
+                </h3>
                 <p className="flex-grow">
-                  We include all the tracks, vibes, and energy of our mixtapes - Check it out now!
+                  We include all the tracks, vibes, and energy of our mixtapes -
+                  Check it out now!
                 </p>
                 <div className="mt-4">
                   <a
@@ -160,10 +163,38 @@ const Share: React.FC<ShareProps> = () => {
               </div>
             </div>
           </div>
+          <div className="w-full max-w-md">
+            {/* Card 6 - Contributors */}
+            <div className="bg-gradient-to-tr from-gray-900 to-indigo-800 p-6 rounded-lg shadow-md text-white rounded-xl flex flex-col h-full">
+              <div className="flex justify-start mb-4 items-center">
+                <Image
+                  src="https://img.icons8.com/?size=100&id=62856&format=png&color=000000"
+                  alt="GB Logo"
+                  width={50}
+                  height={50}
+                  className="object-contain"
+                />
+                <p className="text-2xl font-bold">GitHub</p>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Project Contributors</h3>
+              <p className="flex-grow">
+                Meet the amazing contributors who have helped shape this project
+                with their dedication and hard work.
+              </p>
+              <div className="mt-4">
+                <a
+                  className="btn-sm px-4 py-2 text-l font-bold text-white bg-gradient-to-tr from-gray-900 to-indigo-800 mx-3 rounded-xl inline-block"
+                  href="/Credits"
+                >
+                  View Credits
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
-}
+};
 
 export default Share;

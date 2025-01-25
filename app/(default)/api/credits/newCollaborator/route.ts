@@ -39,35 +39,40 @@ export async function POST(request: NextRequest) {
 
         const contributors = await contributorsResponse.json();
 
-        const credits = await Promise.all(
-            contributors.map(async (contributor: any) => {
-                const { id , name , login , avatar_url , html_url } = contributor;
-                const contributorName = name || login;
+        const newCredits = [];
 
-                const avatarResponse = await fetch(avatar_url);
-                if(!avatarResponse.ok) {
-                    throw new Error(`Failed to fetch avatar for ${contributorName}`);
-                }
+        for(const contributor of contributors) {
+            const { id , name , login , avatar_url , html_url } = contributor;
+            const contributorName = name || login;
 
-                const avatarBuffer = Buffer.from(await avatarResponse.arrayBuffer());
+            const existingCredit = await Credit.findOne({userId: id});
+            if(existingCredit) {
+              continue;
+            }
 
-                const { secure_url , public_id } = await uploadToCloudinary(avatarBuffer);
+            const avatarResponse = await fetch(avatar_url);
+            if(!avatarResponse.ok) {
+              throw new Error(`Failed to fetch avatar for ${contributorName}`);
+            }
 
-                const newCredit = new Credit({
-                    userId: id,
-                    name: contributorName,
-                    githubUrl: html_url,
-                    imageUrl: secure_url,
-                    publicId: public_id,
-                });
+            const avatarBuffer = Buffer.from(await avatarResponse.arrayBuffer());
 
-                await newCredit.save();
+            const { secure_url , public_id } = await uploadToCloudinary(avatarBuffer);
 
-                return newCredit;
-            })
-        );
+            const newCredit = new Credit({
+              userId: id,
+              name: contributorName,
+              githubUrl: html_url,
+              imageUrl: secure_url,
+              publicId: public_id,
+            });
 
-        return NextResponse.json({success: true, credits}, {status: 201});
+            await newCredit.save();
+
+            newCredits.push(newCredit);
+          }
+
+        return NextResponse.json({success: true, newCredits}, {status: 201});
     } catch (error) {
         console.log("Error creating credits:", error);
         return NextResponse.json({error: 'Failed to create credits'}, {status: 500});
