@@ -244,7 +244,7 @@ export default function PinPage() {
           ))}
       </div>
 
-      {/* {isAdmin && ( */}
+      {isAdmin && (
       <div className="w-full flex justify-center mt-10">
         <button
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition"
@@ -260,7 +260,7 @@ export default function PinPage() {
           Edit
         </button>
       </div>
-      {/* )}  */}
+      )}
     </div>
   );
 }
