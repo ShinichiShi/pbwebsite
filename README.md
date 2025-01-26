@@ -67,12 +67,16 @@ infisical run -- npm run dev
 2. Create a new branch for your feature or bug fix:  
    ```bash
    git checkout -b feature/<feature-name>
-   ```  
-3. Make your changes and commit them:  
+   ```
+3.  Stage the files for commit:
+    ```bash
+    git add <file_name>  # Or use "git add ." to stage all changes
+    ``` 
+4. Make your changes and commit them:  
    ```bash
    git commit -m "Add feature: <feature-description>"
-   ```  
-4. Push your branch and submit a Pull Request to the main repository:  
+   ```
+4. Push your branch and submit a Pull Request to the ***staging*** repository:  
    ```bash
    git push origin feature/<feature-name>
    ```  
