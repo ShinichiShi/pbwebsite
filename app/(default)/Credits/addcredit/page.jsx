@@ -5,8 +5,7 @@ import {useRouter} from 'next/navigation';
 
 export default function AddCreditPage() {
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [linkedinUrl, setLinkedinUrl] = useState('');
+    const [githubUrl, setGithubUrl] = useState('');
     const [image,setImage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
@@ -15,7 +14,7 @@ export default function AddCreditPage() {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        if(!name || !description || !linkedinUrl || !image){
+        if(!name  || !githubUrl || !image){
             setError('Please fill in all fields');
             return;
         }
@@ -26,8 +25,7 @@ export default function AddCreditPage() {
         try {
             const formData = new FormData();
             formData.append('name' , name);
-            formData.append('description' , description);
-            formData.append('linkedinUrl' , linkedinUrl);
+            formData.append('githubUrl' , githubUrl);
             formData.append('image' , image);
 
             const response = await fetch('/api/credits/new' , {
@@ -70,25 +68,14 @@ export default function AddCreditPage() {
               />
             </div>
     
-            {/* Description */}
-            <div className="mb-4">
-              <label className="block text-slate-100 mb-2">Description</label>
-              <textarea
-                className="w-full p-2 rounded bg-gray-700 text-white"
-                rows="4"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
-            </div>
-    
             {/* LinkedIn URL */}
             <div className="mb-4">
-              <label className="block text-slate-100 mb-2">LinkedIn URL</label>
+              <label className="block text-slate-100 mb-2">GitHub URL</label>
               <input
                 type="url"
                 className="w-full p-2 rounded bg-gray-700 text-white"
-                value={linkedinUrl}
-                onChange={(e) => setLinkedinUrl(e.target.value)}
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
               />
             </div>
     

@@ -79,11 +79,10 @@ export default function PinPage() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, description, linkedinUrl } = e.target.elements;
+    const { name, githubUrl } = e.target.elements;
     const updatedCredit = {
       name: name.value,
-      description: description.value,
-      linkedinUrl: linkedinUrl.value,
+      githubUrl: githubUrl.value,
     };
 
     try {
@@ -123,11 +122,10 @@ export default function PinPage() {
     setShowEditIcons((prev) => !prev);
   };
 
-
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 mt-14 mb-6">
-        Website Contributors
+        Website <span className="text-green-500">Contributors</span>
       </h1>
 
       {isLoading && <p className="text-slate-100">Loading...</p>}
@@ -153,20 +151,13 @@ export default function PinPage() {
               className="w-full p-2 rounded bg-gray-700 text-white"
             />
           </div>
+
           <div className="mb-4">
-            <label className="block mb-2 font-medium">Description</label>
-            <textarea
-              name="description"
-              defaultValue={selectedCredit.description}
-              className="w-full p-2 rounded bg-gray-700 text-white"
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 font-medium">LinkedIn URL</label>
+            <label className="block mb-2 font-medium">GitHub URL</label>
             <input
               type="url"
               name="linkedinUrl"
-              defaultValue={selectedCredit.linkedinUrl}
+              defaultValue={selectedCredit.githubUrl}
               className="w-full p-2 rounded bg-gray-700 text-white"
             />
           </div>
@@ -190,16 +181,18 @@ export default function PinPage() {
 
       {/* Grid container */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-[10px] items-start">
         {!isLoading &&
           !error &&
-          contributors.map((contributor) => (
-            <div className="relative" key={contributor._id}>
+          [...contributors]
+          .sort((a,b) => a.name.localeCompare(b.name))
+          .map((contributor) => (
+            <div
+              className="relative flex flex-col items-center"
+              key={contributor._id}
+            >
               {/* PinContainer */}
-              <PinContainer
-                title="Visit Linkedin"
-                href={contributor.linkedinUrl}
-              >
+              <PinContainer title="Visit GitHub" href={contributor.githubUrl}>
                 <div className="flex flex-col p-4 tracking-tight text-slate-100/50 w-[20rem] h-[20rem] relative bg-gray-900 rounded-md">
                   {/* Image wrapper */}
                   <div className="relative h-full w-full">
@@ -215,9 +208,6 @@ export default function PinPage() {
                       <h3 className="font-bold text-base text-slate-100">
                         {contributor.name}
                       </h3>
-                      <p className="text-base text-slate-300 mt-2">
-                        {contributor.description}
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -255,21 +245,21 @@ export default function PinPage() {
       </div>
 
       {isAdmin && (
-        <div className="w-full flex justify-center mt-10">
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition"
-            onClick={() => router.push("/Credits/addcredit")}
-          >
-            Add Contributor
-          </button>
+      <div className="w-full flex justify-center mt-10">
+        <button
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition"
+          onClick={() => router.push("/Credits/addcredit")}
+        >
+          Add Contributor
+        </button>
 
-          <button
-            className="bg-white text-green-600 px-4 py-2 rounded hover:bg-gray-500 transition ml-4"
-            onClick={toggleEditIcons}
-          >
-            Edit
-          </button>
-        </div>
+        <button
+          className="bg-white text-green-600 px-4 py-2 rounded hover:bg-gray-500 transition ml-4"
+          onClick={toggleEditIcons}
+        >
+          Edit
+        </button>
+      </div>
       )}
     </div>
   );
