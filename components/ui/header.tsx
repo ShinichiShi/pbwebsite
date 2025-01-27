@@ -8,16 +8,20 @@ import MobileMenu from './mobile-menu'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/Firebase'
 
+import { useStore } from "@/lib/zustand/store";
+
 
 export default function Header() {
   const [top, setTop] = useState<boolean>(true)
   const pathname = usePathname()
 
   const [loggedIn, setLoggedIn] = useState(false);
+  const { reset } = useStore();
 
   const handleLogout = async () => {
     await auth.signOut();
     setLoggedIn(false);
+    reset();
   }
 
   useEffect(() => {

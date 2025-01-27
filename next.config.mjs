@@ -9,7 +9,8 @@ const nextConfig = {
       "img.icons8.com",
       "icpc.global",
       "img.freepik.com",
-      "media.licdn.com"
+      "media.licdn.com",
+      "res.cloudinary.com"
     ],
   },
 };
