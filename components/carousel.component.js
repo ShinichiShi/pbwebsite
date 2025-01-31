@@ -50,7 +50,7 @@ export default function Carousel({ slides, useScrollHoverEffects = false, classN
       </div>
 
       <div className={cn("absolute top-0 h-full w-full justify-between items-center flex text-white px-10 text-3xl", 
-        useScrollHoverEffects && "opacity-0 hover:opacity-40 transition-opacity duration-300")}>
+        useScrollHoverEffects && "opacity-0 px-3 hover:opacity-40 transition-opacity duration-300")}>
         <button onClick={previousSlide}>
           <BsFillArrowLeftCircleFill />
         </button>
