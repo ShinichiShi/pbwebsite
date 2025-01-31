@@ -44,7 +44,8 @@ export default function Carousel({ slides, useScrollHoverEffects = false, classN
             src={s} 
             alt="" 
             {...(useScrollHoverEffects ? { width: 500, height: 500 }: {})}
-            className={cn("items-center", useScrollHoverEffects && "w-full h-full object-cover")}  
+            className={cn("items-center", 
+              useScrollHoverEffects && "w-full h-full object-cover")}  
             key={idx} />;
         })}
       </div>
