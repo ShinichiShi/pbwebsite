@@ -32,7 +32,8 @@ export default function Carousel({ slides, useScrollHoverEffects = false, classN
   }, [useScrollHoverEffects, current]);
 
   return (
-    <div className={cn("overflow-hidden relative", useScrollHoverEffects && "rounded-xl h-64")}>
+    <div className={cn("overflow-hidden relative", 
+    useScrollHoverEffects && "rounded-xl h-64")}>
       <div
         className={`flex transition ease-out duration-1000`}
         style={{
