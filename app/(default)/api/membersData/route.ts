@@ -3,7 +3,48 @@ import { cloudinary } from "@/Cloudinary";
 import connectMongoDB from "@/lib/dbConnect";
 import Membersmodel from "@/models/Members";
 import { ObjectId } from "mongodb";
-
+/**
+ * @swagger
+ * /api/members:
+ *   get:
+ *     summary: Retrieve all members
+ *     description: Fetches all members from the database and returns their details.
+ *     responses:
+ *       200:
+ *         description: A list of all members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ *                   company:
+ *                     type: string
+ *                   year:
+ *                     type: string
+ *                   linkedInUrl:
+ *                     type: string
+ *                   imageUrl:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 details:
+ *                   type: string
+ */
 // GET handler to retrieve all members
 export async function GET() {
   try {
@@ -39,7 +80,74 @@ export async function GET() {
     }
   }
 }
-
+/**
+ * @swagger
+ * /api/members:
+ *   post:
+ *     summary: Add a new member
+ *     description: Adds a new member to the database with the provided details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               year:
+ *                 type: string
+ *               linkedInUrl:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Member added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Member added successfully"
+ *                 savedMember:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *       400:
+ *         description: Missing required field
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Missing Name."
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to add member"
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ */
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -74,7 +182,86 @@ export async function POST(request: Request) {
     );
   }
 }
-
+/**
+ * @swagger
+ * /api/members:
+ *   put:
+ *     summary: Update an existing member
+ *     description: Updates the details of an existing member in the database.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               company:
+ *                 type: string
+ *               year:
+ *                 type: string
+ *               linkedInUrl:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Member updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Member updated successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *       400:
+ *         description: Missing required fields: 'id' and 'name' are mandatory.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required fields: 'id' and 'name' are mandatory."
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *       404:
+ *         description: Member not found with the provided ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "No member found with ID: <id>"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to update member"
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ */
 // PUT handler to update an existing member
 export async function PUT(request: Request) {
   try {
@@ -123,7 +310,31 @@ export async function PUT(request: Request) {
     );
   }
 }
-
+/**
+ * @swagger
+ * /api/members:
+ *   delete:
+ *     summary: Delete a member and their image
+ *     description: Deletes a member from the database along with their associated image from Cloudinary.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Member and image deleted successfully
+ *       400:
+ *         description: Missing member ID
+ *       404:
+ *         description: Member not found
+ *       500:
+ *         description: Internal server error
+ */
 // DELETE handler to delete a member and their image
 export async function DELETE(request: Request) {
   try {

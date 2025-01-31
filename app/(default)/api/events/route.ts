@@ -2,7 +2,52 @@ import { NextResponse } from "next/server";
 import Eventmodel from "@/models/Events";
 import connectMongoDB from "@/lib/dbConnect";
 import { v4 as uuidv4 } from "uuid";
-
+/**
+ * @swagger
+ * /api/events:
+ *   get:
+ *     summary: Retrieve all events
+ *     description: Fetches all stored events from the database.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of events.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 events:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       eventName:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       eventDate:
+ *                         type: string
+ *                         format: date
+ *                       lastDateOfRegistration:
+ *                         type: string
+ *                         format: date
+ *                       dateCreated:
+ *                         type: string
+ *                         format: date-time
+ *                       dateModified:
+ *                         type: string
+ *                         format: date-time
+ *                       imageURL:
+ *                         type: string
+ *                         format: uri
+ *                       registrationLink:
+ *                         type: string
+ *                         format: uri
+ *       500:
+ *         description: Internal server error
+ */
 // Helper function to validate event data
 const validateEvent = (event: any) => {
   const errors: string[] = [];
@@ -63,7 +108,43 @@ const validateEvent = (event: any) => {
 
   return errors;
 };
-
+/**
+ * @swagger
+ * /api/events:
+ *   post:
+ *     summary: Create a new event
+ *     description: Adds a new event to the database.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               eventName:
+ *                 type: string
+ *               eventDate:
+ *                 type: string
+ *                 format: date
+ *               lastDateOfRegistration:
+ *                 type: string
+ *                 format: date
+ *               description:
+ *                 type: string
+ *               imageURL:
+ *                 type: string
+ *                 format: uri
+ *               registrationLink:
+ *                 type: string
+ *                 format: uri
+ *     responses:
+ *       201:
+ *         description: Successfully created an event.
+ *       400:
+ *         description: Validation error.
+ *       500:
+ *         description: Internal server error.
+ */
 // GET request
 export async function GET(request: Request) {
   await connectMongoDB();
@@ -99,7 +180,51 @@ export async function GET(request: Request) {
     }
   }
 }
-
+/**
+ * @swagger
+ * /api/events:
+ *   put:
+ *     summary: Update an existing event
+ *     description: Updates an event in the database based on event ID.
+ *     parameters:
+ *       - name: eventid
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               eventName:
+ *                 type: string
+ *               eventDate:
+ *                 type: string
+ *                 format: date
+ *               lastDateOfRegistration:
+ *                 type: string
+ *                 format: date
+ *               description:
+ *                 type: string
+ *               imageURL:
+ *                 type: string
+ *                 format: uri
+ *               registrationLink:
+ *                 type: string
+ *                 format: uri
+ *     responses:
+ *       200:
+ *         description: Event updated successfully.
+ *       400:
+ *         description: Validation error or missing event ID.
+ *       404:
+ *         description: Event not found.
+ *       500:
+ *         description: Internal server error.
+ */
 // POST request
 export async function POST(request: Request) {
   try {
@@ -133,6 +258,26 @@ export async function POST(request: Request) {
     );
   }
 }
+/**
+ * @swagger
+ * /api/events:
+ *   delete:
+ *     summary: Delete an event
+ *     description: Deletes an event from the database based on event ID.
+ *     parameters:
+ *       - name: eventid
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Event deleted successfully.
+ *       400:
+ *         description: Missing event ID.
+ *       500:
+ *         description: Internal server error.
+ */
 // PUT request
 export async function PUT(request: Request) {
   try {
