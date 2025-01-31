@@ -33,7 +33,7 @@ export default function Carousel({ slides, useScrollHoverEffects = false, classN
 
   return (
     <div className={cn("overflow-hidden relative", 
-    useScrollHoverEffects && "rounded-xl h-64")}>
+    useScrollHoverEffects && "rounded-xl h-64 ")}>
       <div
         className={`flex transition ease-out duration-1000`}
         style={{
@@ -46,7 +46,7 @@ export default function Carousel({ slides, useScrollHoverEffects = false, classN
             alt="" 
             {...(useScrollHoverEffects ? { width: 500, height: 500 }: {})}
             className={cn("items-center", 
-              useScrollHoverEffects && "w-full h-full object-cover")}  
+              useScrollHoverEffects && "w-auto h-auto object-cover")}  
             key={idx} />;
         })}
       </div>
