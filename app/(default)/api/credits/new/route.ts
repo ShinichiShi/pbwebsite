@@ -33,11 +33,10 @@ export async function POST(request: NextRequest) {
 
         const formData = await request.formData();
         const name = formData.get('name') as string;
-        const description = formData.get('description') as string;
-        const linkedinUrl = formData.get('linkedinUrl') as string;
+        const githubUrl = formData.get('githubUrl') as string;
         const file = formData.get('image') as File;
 
-        if(!name || !description || !file || !linkedinUrl) {
+        if(!name  || !file || !githubUrl) {
             return NextResponse.json({error: 'Missing required fields'}, {status: 400});
         }
 
@@ -47,8 +46,7 @@ export async function POST(request: NextRequest) {
 
         const newCredit = new Credit({
             name,
-            description,
-            linkedinUrl,
+            githubUrl,
             imageUrl: secure_url,
             publicId: public_id,
         });
