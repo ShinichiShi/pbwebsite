@@ -15,6 +15,8 @@ import { UploadApiResponse } from "cloudinary";
  *   post:
  *     summary: Upload an image file to Cloudinary
  *     description: This endpoint handles image file uploads and uploads the file to Cloudinary.
+ *     tags:
+ *      - Members
  *     requestBody:
  *       required: true
  *       content:

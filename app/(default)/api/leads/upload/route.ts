@@ -15,6 +15,8 @@ import { UploadApiResponse } from "cloudinary";
  *   post:
  *     summary: Uploads an image to Cloudinary.
  *     description: Receives an image file and uploads it to Cloudinary, returning the secure URL of the uploaded image.
+ *     tags:
+ *      - Upload
  *     requestBody:
  *       required: true
  *       content:

@@ -28,6 +28,8 @@ interface LeaderboardData {
  *   post:
  *     summary: Fetches and updates the leaderboard from VJudge.
  *     description: Fetches contest data from VJudge API, updates the leaderboard, and stores it in the database.
+ *     tags:
+ *      - Hustle
  *     responses:
  *       200:
  *         description: Successfully updated leaderboard
@@ -167,6 +169,8 @@ export async function POST() {
  *   get:
  *     summary: Fetches the latest and leaderboard data from the database.
  *     description: Fetches the latest contest results and leaderboard rankings from the database.
+ *     tags:
+ *      - Hustle
  *     responses:
  *       200:
  *         description: Successfully fetched hustle data
