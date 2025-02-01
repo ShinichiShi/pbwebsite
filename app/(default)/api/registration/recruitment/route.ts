@@ -69,7 +69,7 @@ const validateUSN = (usn: string): boolean =>
  *     summary: Register a new participant for recruitment.
  *     description: Validates the input and reCAPTCHA, then stores the registration details in Firebase.
  *     tags:
- *      - Recruitment
+ *      - Registration
  *     requestBody:
  *       required: true
  *       content:
