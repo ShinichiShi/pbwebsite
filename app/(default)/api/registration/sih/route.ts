@@ -100,6 +100,8 @@ import { NextResponse } from "next/server";
  *   post:
  *     summary: Registers a team for SIH 2024
  *     description: Registers a new team by submitting team details, project information, and performing necessary validations.
+ *     tags:
+ *      - Registration
  *     requestBody:
  *       required: true
  *       content:

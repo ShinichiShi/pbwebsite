@@ -9,6 +9,8 @@ import { ObjectId } from "mongodb";
  *   get:
  *     summary: Retrieve all members
  *     description: Fetches all members from the database and returns their details.
+ *     tags:
+ *      - Members
  *     responses:
  *       200:
  *         description: A list of all members
@@ -86,6 +88,8 @@ export async function GET() {
  *   post:
  *     summary: Add a new member
  *     description: Adds a new member to the database with the provided details.
+ *     tags:
+ *      - Members
  *     requestBody:
  *       required: true
  *       content:
@@ -188,6 +192,8 @@ export async function POST(request: Request) {
  *   put:
  *     summary: Update an existing member
  *     description: Updates the details of an existing member in the database.
+ *     tags:
+ *      - Members
  *     requestBody:
  *       required: true
  *       content:
@@ -226,7 +232,7 @@ export async function POST(request: Request) {
  *                     id:
  *                       type: string
  *       400:
- *         description: Missing required fields: 'id' and 'name' are mandatory.
+ *         description: "Missing required fields: 'id' and 'name' are mandatory."
  *         content:
  *           application/json:
  *             schema:
@@ -316,6 +322,8 @@ export async function PUT(request: Request) {
  *   delete:
  *     summary: Delete a member and their image
  *     description: Deletes a member from the database along with their associated image from Cloudinary.
+ *     tags:
+ *      - Members
  *     requestBody:
  *       required: true
  *       content:

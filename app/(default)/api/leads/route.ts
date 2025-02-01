@@ -41,6 +41,8 @@ function validateLeadData(leadData: any): string | null {
  *   get:
  *     summary: Fetch all leads
  *     description: Retrieves a list of all current and alumni leads.
+ *     tags:
+ *      - Leads
  *     responses:
  *       200:
  *         description: Successfully retrieved leads
@@ -80,6 +82,8 @@ export async function GET(request: Request) {
  *   post:
  *     summary: Add a new lead
  *     description: Creates a new lead and stores it in the database.
+ *     tags:
+ *      - Leads
  *     responses:
  *       201:
  *         description: Successfully created lead
@@ -126,6 +130,8 @@ export async function POST(request: Request) {
  *   put:
  *     summary: Update an existing lead
  *     description: Updates an existing lead based on the provided ID.
+ *     tags:
+ *      - Leads
  *     responses:
  *       200:
  *         description: Successfully updated lead
@@ -188,6 +194,8 @@ export async function PUT(request: Request) {
  *   delete:
  *     summary: Remove an existing lead
  *     description: Deletes a lead based on the provided ID.
+ *     tags:
+ *      - Leads
  *     responses:
  *       200:
  *         description: Successfully deleted lead
