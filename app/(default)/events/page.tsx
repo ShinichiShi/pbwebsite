@@ -11,7 +11,6 @@ import { useStore} from "@/lib/zustand/store";
 
 const EventsPage = () => {
   const [showForm, setShowForm] = useState(false); 
-  // const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const { isAdmin , setAdmin } = useStore();
   const [events, setEvents] = useState<
     {

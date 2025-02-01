@@ -26,7 +26,6 @@ export default function AchievementsPage() {
   const [newAchievement, setNewAchievement] = useState<Partial<Achiever>>({
     achievements: [""],
   });
-  // const [isAdmin, setIsAdmin] = useState(false);
   const { isAdmin , setAdmin } = useStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editName, setEditName] = useState("");
