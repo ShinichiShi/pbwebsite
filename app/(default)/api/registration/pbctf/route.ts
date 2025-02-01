@@ -17,7 +17,7 @@ import { NextResponse } from "next/server";
  *     summary: Check if a USN is registered
  *     description: This endpoint checks if the provided USN is already registered for a participant.
  *     tags:
- *      - Registrations
+ *      - Registration
  *     parameters:
  *       - in: query
  *         name: usn
@@ -123,7 +123,7 @@ export async function GET(request: Request) {
  *     summary: Handle registration actions
  *     description: This endpoint handles different registration actions like reCAPTCHA validation or adding a registration.
  *     tags:
- *      - Registrations
+ *      - Registration
  *     parameters:
  *       - in: query
  *         name: action
@@ -203,7 +203,7 @@ export async function POST(request: Request) {
  *     summary: Validate reCAPTCHA token
  *     description: This endpoint validates the reCAPTCHA token to verify if the user is human.
  *     tags:
- *      - Registrations
+ *      - Registration
  *     requestBody:
  *       required: true
  *       content:
