@@ -73,7 +73,7 @@ const Leads: React.FC = () => {
 
       if (selectedLead.imageUrl && selectedLead.imageUrl.startsWith("blob")) {
         console.log(
-          "Image file detected, preparing for upload to Firebase Storage..."
+          "Image file detected, preparing for upload to Cloudinary Storage..."
         );
 
         // Create a new FormData object
@@ -105,7 +105,7 @@ const Leads: React.FC = () => {
 
       const leadData = {
         ...selectedLead,
-        imageUrl: imageUrl, // Ensure the Firebase URL is used
+        imageUrl: imageUrl, // Ensure the Cludinary URL is used
       };
 
       if (selectedLead.id) {

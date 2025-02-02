@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import connectMongoDB from "@/lib/dbConnect";
 import Achievementmodel from "@/models/Achievements";
-import { db, storage } from "@/Firebase";
+import { cloudinary } from "@/Cloudinary";
+import { Readable } from "stream";
+import { UploadApiResponse } from "cloudinary";
+import connectMongoDB from "@/lib/dbConnect";
 
 // POST method: Create or add a new achievement
 export async function POST(request: Request) {
@@ -17,8 +18,10 @@ export async function POST(request: Request) {
     const portfolio = formData.get("portfolio") as string;
     const internship = formData.get("internship") as string;
     const companyPosition = formData.get("companyPosition") as string;
-    const achievements = JSON.parse(formData.get("achievements") as string) as string[];
-    const image = formData.get("image") as File;
+    const achievements = JSON.parse(
+      formData.get("achievements") as string
+    ) as string[];
+    const image: File | null = formData.get("image") as File;
 
     // Check if a person with the same name already exists in MongoDB
     const existingMember = await Achievementmodel.findOne({ name });
@@ -29,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Handle image upload to Firebase Storage
+    // Handle image upload to Cloudinary Storage
     if (!image) {
       return NextResponse.json(
         { error: "Image file is required" },
@@ -37,11 +40,33 @@ export async function POST(request: Request) {
       );
     }
 
-    const storageRef = ref(storage, `images/${image.name}`);
-    await uploadBytes(storageRef, image);
-    const imageUrl = await getDownloadURL(storageRef);
+    // Convert the uploaded file (File object) to a Buffer
+    const arrayBuffer = await image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    
+    // Create a readable stream from the Buffer
+    const stream = Readable.from(buffer);
+
+    // Upload the image to Cloudinary
+    const uploadResult: UploadApiResponse = await new Promise(
+      (resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "achivements", public_id: name }, // Specify folder and use `name` for the file name
+          (error, result) => {
+            if (error || !result) {
+              reject(error); // Handle upload errors
+            } else {
+              resolve(result); // Resolve with the upload result
+            }
+          }
+        );
+
+        // Pipe the readable stream into the Cloudinary upload stream
+        stream.pipe(uploadStream);
+      }
+    );
+    const imageUrl = uploadResult.secure_url;
+
     const newAchievement = new Achievementmodel({
       name,
       email,
@@ -53,12 +78,12 @@ export async function POST(request: Request) {
       imageUrl,
     });
 
-    const result = await newAchievement.save(); 
+    const result = await newAchievement.save();
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error creating member:", error);
     return NextResponse.json(
-      { error: "An error occurred", details:(error as Error).message},
+      { error: "An error occurred", details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -66,8 +91,6 @@ export async function POST(request: Request) {
 
 // GET method: Fetch achievements based on name or fetch all if no name is provided
 export async function GET(request: NextRequest) {
-  await connectMongoDB();
-
   try {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get("name");
@@ -98,7 +121,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching members:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching members", details: (error as Error).message },
+      {
+        error: "An error occurred while fetching members",
+        details: (error as Error).message,
+      },
       { status: 500 }
     );
   }
@@ -122,9 +148,13 @@ export async function PUT(request: Request) {
     // Extract data from the form, using existing values if new data is not provided
     const email = (formData.get("email") as string) || existingMember.email;
     const batch = (formData.get("batch") as string) || existingMember.batch;
-    const portfolio = (formData.get("portfolio") as string) || existingMember.portfolio;
-    const internship = (formData.get("internship") as string) || existingMember.internship;
-    const companyPosition = (formData.get("companyPosition") as string) || existingMember.companyPosition;
+    const portfolio =
+      (formData.get("portfolio") as string) || existingMember.portfolio;
+    const internship =
+      (formData.get("internship") as string) || existingMember.internship;
+    const companyPosition =
+      (formData.get("companyPosition") as string) ||
+      existingMember.companyPosition;
     const achievements = formData.get("achievements")
       ? JSON.parse(formData.get("achievements") as string)
       : existingMember.achievements;
@@ -134,9 +164,32 @@ export async function PUT(request: Request) {
 
     // Handle image upload if a new image is provided
     if (image) {
-      const storageRef = ref(storage, `images/${image.name}`);
-      await uploadBytes(storageRef, image);
-      imageUrl = await getDownloadURL(storageRef);
+      // Convert the uploaded file (File object) to a Buffer
+      const arrayBuffer = await image.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Create a readable stream from the Buffer
+      const stream = Readable.from(buffer);
+
+      // Upload the image to Cloudinary
+      const uploadResult: UploadApiResponse = await new Promise(
+        (resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "achivements", public_id: name }, // Specify folder and use `name` for the file name
+            (error, result) => {
+              if (error || !result) {
+                reject(error); // Handle upload errors
+              } else {
+                resolve(result); // Resolve with the upload result
+              }
+            }
+          );
+
+          // Pipe the readable stream into the Cloudinary upload stream
+          stream.pipe(uploadStream);
+        }
+      );
+      imageUrl = uploadResult.secure_url;
     }
 
     // Update the member data
@@ -154,7 +207,10 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error("Error updating member:", error);
     return NextResponse.json(
-      { error: "An error occurred while updating", details: (error as Error).message },
+      {
+        error: "An error occurred while updating",
+        details: (error as Error).message,
+      },
       { status: 500 }
     );
   }
