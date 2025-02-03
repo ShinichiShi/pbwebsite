@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from "uuid";
  *   get:
  *     summary: Retrieve all events
  *     description: Fetches all stored events from the database.
+ *     tags:
+ *       - Events
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of events.
@@ -114,6 +116,8 @@ const validateEvent = (event: any) => {
  *   post:
  *     summary: Create a new event
  *     description: Adds a new event to the database.
+ *     tags:
+ *       - Events
  *     requestBody:
  *       required: true
  *       content:
@@ -186,6 +190,8 @@ export async function GET(request: Request) {
  *   put:
  *     summary: Update an existing event
  *     description: Updates an event in the database based on event ID.
+ *     tags:
+ *       - Events
  *     parameters:
  *       - name: eventid
  *         in: query
@@ -264,6 +270,8 @@ export async function POST(request: Request) {
  *   delete:
  *     summary: Delete an event
  *     description: Deletes an event from the database based on event ID.
+ *     tags:
+ *       - Events
  *     parameters:
  *       - name: eventid
  *         in: query

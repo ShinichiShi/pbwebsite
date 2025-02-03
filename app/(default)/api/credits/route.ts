@@ -6,6 +6,8 @@ import Credit from "@/models/Credit";
  *   get:
  *     summary: Retrieve all credits
  *     description: Fetches all stored contributor credits from the database.
+ *     tags:
+ *      - Credits
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of credits

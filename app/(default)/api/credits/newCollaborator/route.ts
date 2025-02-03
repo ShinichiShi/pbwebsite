@@ -14,6 +14,8 @@ cloudinary.v2.config({
  *   post:
  *     summary: Fetch GitHub contributors and store them in the database
  *     description: Fetches contributors from a specified GitHub repository, downloads their avatars, uploads them to Cloudinary, and saves contributor details in MongoDB.
+ *     tags:
+ *      - Credits
  *     responses:
  *       201:
  *         description: Successfully stored new contributors

@@ -84,15 +84,3 @@ input:-webkit-autofill:active {
   padding-top: 10px;
   font-size: 14px;
 }
-.swagger-ui {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.swagger-ui .wrapper {
-  padding: 0 20px;
-}
-.dark .swagger-ui {
-  filter: invert(0) !important;
-}
-
-

@@ -14,6 +14,8 @@ cloudinary.v2.config({
  *   post:
  *     summary: Create a new credit entry
  *     description: Uploads an image to Cloudinary and creates a new credit entry in the database.
+ *     tags:
+ *      - Credits
  *     requestBody:
  *       required: true
  *       content:

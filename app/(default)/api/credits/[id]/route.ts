@@ -6,6 +6,8 @@ import Credit from '@/models/Credit';
  *   patch:
  *     summary: Update a credit entry
  *     description: Updates a credit entry in the database by its ID.
+ *     tags:
+ *      - Credits
  *     parameters:
  *       - in: path
  *         name: id
@@ -88,6 +90,8 @@ export async function PATCH(req: Request) {
  *   delete:
  *     summary: Delete a credit entry
  *     description: Deletes a credit entry from the database by its ID.
+ *     tags:
+ *      - Credits
  *     parameters:
  *       - in: path
  *         name: id
