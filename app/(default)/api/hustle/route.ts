@@ -157,12 +157,15 @@ export async function GET() {
       name: "leaderboard",
     });
 
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       message: "Fetched hustle data successfully",
       data: {
-        latest: latestDoc,
-        leaderboard: leaderboardDoc,
+      latest: latestDoc,
+      leaderboard: leaderboardDoc,
       },
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error: any) {
     console.error("Database error:", error);
