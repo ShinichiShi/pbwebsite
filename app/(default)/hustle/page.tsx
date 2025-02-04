@@ -60,10 +60,8 @@ export default function ResultsTable() {
         const response = await fetch(`/api/admin?uid=${uid}`);
         const { isAdmin } = await response.json();
         setAdmin(isAdmin);
-        setAdmin(true);
       } catch (error) {
         console.error("Error checking admin status:", error);
-        setAdmin(false);
         setAdmin(false);
       }
     };
@@ -72,7 +70,6 @@ export default function ResultsTable() {
       if (user) {
         checkAdmin(user.uid);
       } else {
-        setAdmin(false);
         setAdmin(false);
       }
     });

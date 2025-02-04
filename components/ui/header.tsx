@@ -1,8 +1,6 @@
 "use client";
 
-
 import { useStore } from "@/lib/zustand/store";
-
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -25,10 +23,8 @@ export default function Header() {
 
     reset();
   }
-=======
-  };
 
-
+ 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
