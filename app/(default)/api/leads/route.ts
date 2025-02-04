@@ -35,7 +35,20 @@ function validateLeadData(leadData: any): string | null {
   }
   return null;
 }
-
+/**
+ * @swagger
+ * /api/leads:
+ *   get:
+ *     summary: Fetch all leads
+ *     description: Retrieves a list of all current and alumni leads.
+ *     tags:
+ *      - Leads
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved leads
+ *       500:
+ *         description: Error fetching leads
+ */
 export async function GET(request: Request) {
   try {
     await connectMongoDB();
@@ -63,7 +76,22 @@ export async function GET(request: Request) {
     );
   }
 }
-
+/**
+ * @swagger
+ * /api/leads:
+ *   post:
+ *     summary: Add a new lead
+ *     description: Creates a new lead and stores it in the database.
+ *     tags:
+ *      - Leads
+ *     responses:
+ *       201:
+ *         description: Successfully created lead
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Error creating lead
+ */
 // POST method: Add a new lead
 export async function POST(request: Request) {
   try {
@@ -96,6 +124,24 @@ export async function POST(request: Request) {
     );
   }
 }
+/**
+ * @swagger
+ * /api/leads:
+ *   put:
+ *     summary: Update an existing lead
+ *     description: Updates an existing lead based on the provided ID.
+ *     tags:
+ *      - Leads
+ *     responses:
+ *       200:
+ *         description: Successfully updated lead
+ *       400:
+ *         description: Validation error or missing ID
+ *       404:
+ *         description: Lead not found
+ *       500:
+ *         description: Error updating lead
+ */
 // PUT method: Update an existing lead
 export async function PUT(request: Request) {
   try {
@@ -142,6 +188,24 @@ export async function PUT(request: Request) {
 }
 
 // DELETE method: Remove an existing lead
+/**
+ * @swagger
+ * /api/leads:
+ *   delete:
+ *     summary: Remove an existing lead
+ *     description: Deletes a lead based on the provided ID.
+ *     tags:
+ *      - Leads
+ *     responses:
+ *       200:
+ *         description: Successfully deleted lead
+ *       400:
+ *         description: Missing ID
+ *       404:
+ *         description: Lead not found
+ *       500:
+ *         description: Error deleting lead
+ */
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

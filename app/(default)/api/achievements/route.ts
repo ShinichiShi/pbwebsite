@@ -4,6 +4,77 @@ import { cloudinary } from "@/Cloudinary";
 import { Readable } from "stream";
 import { UploadApiResponse } from "cloudinary";
 import connectMongoDB from "@/lib/dbConnect";
+/**
+ * @swagger
+ * /api/achievements:
+ *   post:
+ *     summary: Create a new achievement entry.
+ *     description: This endpoint allows creating a new achievement entry by uploading data and an optional image to Cloudinary.
+ *     tags:
+ *       - Achievements
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the person.
+ *               email:
+ *                 type: string
+ *                 description: Email address of the person.
+ *               batch:
+ *                 type: string
+ *                 description: Batch year of the person.
+ *               portfolio:
+ *                 type: string
+ *                 description: Portfolio URL of the person.
+ *               internship:
+ *                 type: string
+ *                 description: Internship details of the person.
+ *               companyPosition:
+ *                 type: string
+ *                 description: Position held at the company.
+ *               achievements:
+ *                 type: string
+ *                 description: JSON string containing achievements.
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Image file of the person.
+ *     responses:
+ *       200:
+ *         description: Achievement created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 batch:
+ *                   type: string
+ *                 portfolio:
+ *                   type: string
+ *                 internship:
+ *                   type: string
+ *                 companyPosition:
+ *                   type: string
+ *                 achievements:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 imageUrl:
+ *                   type: string
+ *       400:
+ *         description: Bad request, missing or invalid fields.
+ *       500:
+ *         description: Internal server error.
+ */
 
 // POST method: Create or add a new achievement
 export async function POST(request: Request) {

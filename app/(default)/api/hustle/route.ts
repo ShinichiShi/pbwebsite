@@ -22,7 +22,22 @@ interface LeaderboardData {
   updatedAt?: Date;
   lastContestCode?: string;
 }
-
+/**
+ * @swagger
+ * /api/hustle/update:
+ *   post:
+ *     summary: Fetches and updates the leaderboard from VJudge.
+ *     description: Fetches contest data from VJudge API, updates the leaderboard, and stores it in the database.
+ *     tags:
+ *      - Hustle
+ *     responses:
+ *       200:
+ *         description: Successfully updated leaderboard
+ *       400:
+ *         description: Invalid response from VJudge or missing data.
+ *       500:
+ *         description: Error while processing or updating data.
+ */
 export async function POST() {
   try {
     await connectMongoDB();
@@ -148,7 +163,20 @@ export async function POST() {
     });
   }
 }
-
+/**
+ * @swagger
+ * /api/hustle/fetch:
+ *   get:
+ *     summary: Fetches the latest and leaderboard data from the database.
+ *     description: Fetches the latest contest results and leaderboard rankings from the database.
+ *     tags:
+ *      - Hustle
+ *     responses:
+ *       200:
+ *         description: Successfully fetched hustle data
+ *       500:
+ *         description: Error while fetching data from the database.
+ */
 export async function GET() {
   try {
     await connectMongoDB();
