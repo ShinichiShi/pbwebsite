@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/Firebase';
+import { useStore } from '@/lib/zustand/store';
 import 'swagger-ui-react/swagger-ui.css';
 
 const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
@@ -15,7 +16,7 @@ const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
 });
 
 export default function ApiDoc() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin, setAdmin } = useStore();
   const [isLoading, setIsLoading] = useState(true);
   const [swaggerConfig, setSwaggerConfig] = useState<any>(null);
 
@@ -27,8 +28,7 @@ export default function ApiDoc() {
           const resp = await fetch(`/api/admin?uid=${uid}`);
           const data = await resp.json();
           if (data.isAdmin) {
-            setIsAdmin(true);
-            // Get the API docs with the user's UID as a query parameter
+            setAdmin(true);
             const docsResp = await fetch(`/api/docs?uid=${uid}`);
             if (docsResp.ok) {
               const swaggerData = await docsResp.json();
@@ -43,7 +43,7 @@ export default function ApiDoc() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [setAdmin]);
 
   if (isLoading) {
     return (

@@ -13,7 +13,7 @@ export const swaggerOptions = {
         description: 'Production server',
       },
       {
-        url: process.env.NEXT_PUBLIC_STAGING_URL || 'https://staging--pbpage.netlify.app/',
+        url: process.env.NEXT_PUBLIC_STAGING_URL || 'https://staging--pbpage.netlify.app',
         description: 'Staging server',
       },
       {

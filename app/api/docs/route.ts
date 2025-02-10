@@ -1,3 +1,5 @@
+import { db } from "@/Firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { getApiDocs } from '@/lib/swagger';
 import { NextResponse } from 'next/server';
 
@@ -18,21 +20,13 @@ export async function GET(request: Request) {
     }
 
     // Check admin status
-    try {
-      const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/admin?uid=${uid}`);
-      const data = await resp.json();
-      
-      if (!data.isAdmin) {
-        return NextResponse.json(
-          { error: 'Access denied. Admin privileges required.' },
-          { status: 403 }
-        );
-      }
-    } catch (error) {
-      console.error("Error checking admin status:", error);
+    const adminDocRef = doc(db, "admin", uid);
+    const adminDocSnap = await getDoc(adminDocRef);
+
+    if (!adminDocSnap.exists()) {
       return NextResponse.json(
-        { error: 'Error verifying admin status' },
-        { status: 500 }
+        { error: 'Access denied. Admin privileges required.' },
+        { status: 403 }
       );
     }
 
