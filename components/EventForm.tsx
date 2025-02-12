@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useStore } from "@/lib/zustand/store";
 
 interface EventFormProps {
   refreshEvents?: () => Promise<void>; // Optional refresh function
@@ -11,9 +12,54 @@ const EventForm: React.FC<EventFormProps> = ({ refreshEvents }) => {
   const [description, setDescription] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [registrationLink, setRegistrationLink] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const { setImage } = useStore();
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("name", eventName || 'event-' + Date.now()); // Fallback name if eventName is empty
+
+    const response = await fetch("/api/events/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload image");
+    }
+
+    const data = await response.json();
+    return data.imageUrl;
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      setImage(file);
+      
+      try {
+        setUploading(true);
+        // Upload the image immediately when selected
+        const cloudinaryUrl = await uploadImage(file);
+        setImageURL(cloudinaryUrl);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image. Please try again.");
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (uploading) {
+      alert("Please wait for the image to finish uploading.");
+      return;
+    }
     try {
       await fetch("/api/events", {
         method: "POST",
@@ -126,22 +172,32 @@ const EventForm: React.FC<EventFormProps> = ({ refreshEvents }) => {
         ></textarea>
       </div>
 
-      {/* Image URL */}
+      {/* Image Upload */}
       <div className="mb-4">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="imageURL"
+          htmlFor="image"
         >
-          Image URL
+          Event Image
         </label>
         <input
-          type="text"
-          id="imageURL"
-          value={imageURL}
-          onChange={(e) => setImageURL(e.target.value)}
+          type="file"
+          id="image"
+          onChange={handleImageChange}
           className="w-full px-3 py-2 border rounded text-black"
-          required
+          accept="image/*"
+          disabled={uploading}
         />
+        {uploading && (
+          <p className="text-blue-500 mt-2">Uploading image...</p>
+        )}
+        {imageURL && !uploading && (
+          <img 
+            src={imageURL} 
+            alt="Event preview" 
+            className="mt-2 max-w-full h-40 object-contain"
+          />
+        )}
       </div>
 
       {/* Registration Link */}

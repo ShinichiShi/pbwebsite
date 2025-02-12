@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Eventmodel from "@/models/Events";
 import connectMongoDB from "@/lib/dbConnect";
 import { v4 as uuidv4 } from "uuid";
+import { cloudinary } from '@/Cloudinary';
 /**
  * @swagger
  * /api/events:
@@ -352,6 +353,38 @@ export async function DELETE(request: Request) {
         { error: "Event ID is required" },
         { status: 400 }
       );
+    }
+    const event = await Eventmodel.findOne({ id: eventid });
+    
+    if (!event) {
+      return NextResponse.json(
+        { error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    // If there's an image URL, delete it from Cloudinary
+    if (event.imageURL) {
+      try {
+        // Extract public_id from the Cloudinary URL
+        const matches = event.imageURL.match(/\/v\d+\/(.+?)\./);
+        const publicId = matches ? matches[1] : null;
+
+        if (publicId) {
+          console.log('Attempting to delete image with public ID:', publicId);
+          const result = await cloudinary.uploader.destroy(publicId);
+          console.log('Cloudinary deletion result:', result);
+        } else {
+          console.warn('Could not extract public ID from URL:', event.imageURL);
+        }
+      } catch (cloudinaryError) {
+        console.error("Error deleting image from Cloudinary:", cloudinaryError);
+        // Log detailed error for debugging
+        if (cloudinaryError instanceof Error) {
+          console.error("Error details:", cloudinaryError.message);
+        }
+        // Continue with event deletion even if image deletion fails
+      }
     }
 
     await Eventmodel.deleteOne({ id: eventid });
