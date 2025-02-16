@@ -41,6 +41,8 @@ export default function AchievementsPage() {
           const data = await resp.json();
           if (data.isAdmin) {
             setAdmin(true);
+          } else {
+            setAdmin(false);
           }
         } catch (error) {
           console.log("Error getting document:", error);

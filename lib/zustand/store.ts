@@ -17,10 +17,10 @@ export const useStore = create<SharedState>((set) => ({
   reset: () => set({ image: null, isAdmin: false }),
 }));
 
-export const useStoreMember = create<SharedState>((set) => ({
-  image: null,
-  setImage: (image) => set({ image }),
-  isAdmin: false,
-  setAdmin: (isAdmin) => set({ isAdmin }), 
-  reset: () => set({ image: null, isAdmin: false }),
-}));
+// export const useStoreMember = create<SharedState>((set) => ({
+//   image: null,
+//   setImage: (image) => set({ image }),
+//   isAdmin: false,
+//   setAdmin: (isAdmin) => set({ isAdmin }), 
+//   reset: () => set({ image: null, isAdmin: false }),
+// }));

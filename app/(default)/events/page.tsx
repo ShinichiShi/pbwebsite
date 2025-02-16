@@ -49,7 +49,10 @@ const EventsPage = () => {
           const data = await resp.json();
           if (data.isAdmin) {
             setAdmin(true);
+          }  else {
+            setAdmin(false);
           }
+          console.log(isAdmin);
         } catch (error) {
           console.log("Error getting document:", error);
         }

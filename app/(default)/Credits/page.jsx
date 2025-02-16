@@ -28,6 +28,8 @@ export default function PinPage() {
           const data = await resp.json();
           if (data.isAdmin) {
             setIsAdmin(true);
+          } else {
+            setAdmin(false);
           }
         } catch (error) {
           console.log("Error getting document:", error);

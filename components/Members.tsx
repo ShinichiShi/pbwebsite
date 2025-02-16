@@ -8,7 +8,6 @@ import { auth } from "@/Firebase";
 import Image from "next/image";
 import Card from "./ui/Card";
 import CollapsibleSection from "./ui/CollapsibleSection";
-import { useStoreMember } from "@/lib/zustand/store";
 import { useStore } from "@/lib/zustand/store";
 
 interface Member {
@@ -47,7 +46,7 @@ export default function Members() {
     imageUrl: "",
   });
 
-  const { image, setImage } = useStoreMember();
+  const { image, setImage } = useStore();
 
   const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>(
     {}
@@ -70,6 +69,8 @@ export default function Members() {
           const data = await resp.json();
           if (data.isAdmin) {
             setAdmin(true);
+          } else {
+            setAdmin(false);
           }
         } catch (error) {
           console.log("Error getting document:", error);
