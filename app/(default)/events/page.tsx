@@ -44,9 +44,11 @@ const EventsPage = () => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const uid = user.uid;
+        console.log(user.uid)
         try {
           const resp = await fetch(`/api/admin?uid=${uid}`);
           const data = await resp.json();
+          console.log(data);
           if (data.isAdmin) {
             setAdmin(true);
           }  else {

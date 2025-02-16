@@ -13,17 +13,19 @@ import { auth } from "@/Firebase";
 export default function Header() {
   const [top, setTop] = useState<boolean>(true);
   const pathname = usePathname();
-  const {isAdmin, setAdmin} = useStore();
   const [loggedIn, setLoggedIn] = useState(false);
   const { reset } = useStore();
 
   const handleLogout = async () => {
-    console.log("Before Sign Out: ", isAdmin);
+    console.log("Before Sign Out: ", useStore.getState());
+    reset();
+    console.log("After Sign Out: ", useStore.getState())
     await auth.signOut();
     setLoggedIn(false);
-    console.log("After Sign Out: ", isAdmin)
+    
+    console.log("After Firebase signOut:", useStore.getState().isAdmin);
 
-    reset();
+    
   }
 
  
