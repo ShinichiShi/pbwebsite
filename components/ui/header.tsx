@@ -18,8 +18,10 @@ export default function Header() {
   const { reset } = useStore();
 
   const handleLogout = async () => {
+    console.log("Before Sign Out: ", useStore);
     await auth.signOut();
     setLoggedIn(false);
+    console.log("After Sign Out: ", useStore)
 
     reset();
   }
