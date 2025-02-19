@@ -67,6 +67,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ currentLeads, alumniLeads }, { status: 200 });
   } catch (error) {
+    console.error("Error fetching leads:", error);
     return NextResponse.json(
       {
         error: "An error occurred while fetching leads",
@@ -112,6 +113,7 @@ export async function POST(request: Request) {
     const savedLead = await newLead.save();
     return NextResponse.json(savedLead, { status: 201 });
   } catch (error) {
+    console.error("Error creating lead:", error);
     return NextResponse.json(
       {
         error: "An error occurred while creating the lead",
@@ -173,6 +175,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(updatedLead, { status: 200 });
   } catch (error) {
+    console.error("Error updating lead:", error);
     return NextResponse.json(
       {
         error: "An error occurred while updating the lead",
@@ -228,9 +231,16 @@ export async function DELETE(request: Request) {
         const publicId = matches ? matches[1] : null;
 
         if (publicId) {
-          await cloudinary.uploader.destroy(publicId);
+          const result = await cloudinary.uploader.destroy(publicId);
+        } else {
+          console.warn('Could not extract public ID from URL:', deletedLead.imageURL);
         }
       } catch (cloudinaryError) {
+        console.error("Error deleting image from Cloudinary:", cloudinaryError);
+        // Log detailed error for debugging
+        if (cloudinaryError instanceof Error) {
+          console.error("Error details:", cloudinaryError.message);
+        }
         // Continue with lead deletion even if image deletion fails
       }
     }
@@ -241,9 +251,18 @@ export async function DELETE(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
-      { error: "An error occurred while deleting the lead", details: (error as Error).message },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      console.error("Error deleting lead:", error.message);
+      return NextResponse.json(
+        { error: "An error occurred while deleting the lead", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error("Unknown error:", error);
+      return NextResponse.json(
+        { error: "An unknown error occurred" },
+        { status: 500 }
+      );
+    }
   }
 }
