@@ -67,7 +67,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ currentLeads, alumniLeads }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching leads:", error);
     return NextResponse.json(
       {
         error: "An error occurred while fetching leads",
@@ -110,12 +109,9 @@ export async function POST(request: Request) {
       ...leadData,
     });
 
-    console.log("New lead instance:", newLead);
-
     const savedLead = await newLead.save();
     return NextResponse.json(savedLead, { status: 201 });
   } catch (error) {
-    console.error("Error creating lead:", error);
     return NextResponse.json(
       {
         error: "An error occurred while creating the lead",
@@ -151,7 +147,7 @@ export async function PUT(request: Request) {
     const id = searchParams.get("id");
     const user = await Leadsmodel.findOne({ id });
     const _id = user._id;
-    console.log(_id);
+    
     if (!id) {
       return NextResponse.json(
         { error: "Lead ID is required" },
@@ -170,14 +166,13 @@ export async function PUT(request: Request) {
       { ...leadData },
       { new: true }
     );
-    console.log(updatedLead);
+    
     if (!updatedLead) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 
     return NextResponse.json(updatedLead, { status: 200 });
   } catch (error) {
-    console.error("Error updating lead:", error);
     return NextResponse.json(
       {
         error: "An error occurred while updating the lead",
@@ -233,19 +228,10 @@ export async function DELETE(request: Request) {
         const publicId = matches ? matches[1] : null;
 
         if (publicId) {
-          console.log('Attempting to delete image with public ID:', publicId);
-          const result = await cloudinary.uploader.destroy(publicId);
-          console.log('Cloudinary deletion result:', result);
-        } else {
-          console.warn('Could not extract public ID from URL:', deletedLead.imageURL);
+          await cloudinary.uploader.destroy(publicId);
         }
       } catch (cloudinaryError) {
-        console.error("Error deleting image from Cloudinary:", cloudinaryError);
-        // Log detailed error for debugging
-        if (cloudinaryError instanceof Error) {
-          console.error("Error details:", cloudinaryError.message);
-        }
-        // Continue with event deletion even if image deletion fails
+        // Continue with lead deletion even if image deletion fails
       }
     }
 
@@ -255,18 +241,9 @@ export async function DELETE(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error deleting lead:", error.message);
-      return NextResponse.json(
-        { error: "An error occurred while deleting the lead", details: error.message },
-        { status: 500 }
-      );
-    } else {
-      console.error("Unknown error:", error);
-      return NextResponse.json(
-        { error: "An unknown error occurred" },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      { error: "An error occurred while deleting the lead", details: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
