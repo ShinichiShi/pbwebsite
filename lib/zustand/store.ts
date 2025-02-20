@@ -1,4 +1,6 @@
 // store/useStore.ts
+"use client";
+
 import {create} from 'zustand';
 
 interface SharedState {

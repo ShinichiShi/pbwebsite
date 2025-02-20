@@ -18,9 +18,11 @@ export default function MobileMenu() {
   const { reset } = useStore();
 
   const handleLogout = async () => {
+    
     await auth.signOut();
     setLoggedIn(false);
     reset();
+    
   }
 
   useEffect(() => {

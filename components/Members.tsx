@@ -67,6 +67,7 @@ export default function Members() {
         try {
           const resp = await fetch(`/api/admin?uid=${uid}`);
           const data = await resp.json();
+          
           if (data.isAdmin) {
             setAdmin(true);
           } else {
