@@ -16,8 +16,8 @@ const SwaggerUI = dynamic(() => import("swagger-ui-react"), {
 });
 
 export default function ApiDoc() {
-  // const [isAdmin, setIsAdmin] = useState(false);
-  const { isAdmin, setAdmin } = useStore();
+  // const [isLoggedIn, setLoggedIn] = useState(false);
+  const { isLoggedIn, setLoggedIn } = useStore();
   const [isLoading, setIsLoading] = useState(true);
   const [swaggerConfig, setSwaggerConfig] = useState<any>(null);
 
@@ -26,14 +26,14 @@ export default function ApiDoc() {
       if (user) {
         const uid = user.uid;
         try {
-          setAdmin(true);
+          setLoggedIn(true);
           // Get the API docs with the user's UID as a query parameter
           const docsResp = await fetch(`/api/docs?uid=${uid}`);
           if (docsResp.ok) {
             const swaggerData = await docsResp.json();
             setSwaggerConfig(swaggerData);
           } else {
-            setAdmin(false);
+            setLoggedIn(false);
           }
         } catch (error) {
           console.log("Error getting document:", error);
@@ -43,7 +43,7 @@ export default function ApiDoc() {
     });
 
     return () => unsubscribe();
-  }, [setAdmin]);
+  }, [setLoggedIn]);
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ export default function ApiDoc() {
     );
   }
 
-  if (!isAdmin) {
+  if (!isLoggedIn) {
     return (
       <div className="flex items-center justify-center min-h-screen text-red-600">
         <p>Access Denied: Admin privileges required</p>

@@ -11,7 +11,7 @@ import { useStore } from "@/lib/zustand/store";
 
 const EventsPage = () => {
   const [showForm, setShowForm] = useState(false);
-  const { isAdmin, setAdmin } = useStore();
+  const { isLoggedIn, setLoggedIn } = useStore();
   const [events, setEvents] = useState<
     {
       id: string;
@@ -44,15 +44,15 @@ const EventsPage = () => {
     onAuthStateChanged(auth, async (user) => {
       try {
         if (user) {
-          setAdmin(true);
+          setLoggedIn(true);
         } else {
-          setAdmin(false);
+          setLoggedIn(false);
         }
       } catch (error) {
         console.log("Error getting document:", error);
       }
     });
-  }, [isAdmin]);
+  }, [isLoggedIn]);
 
   const fetchEvents = async () => {
     const resp = await fetch("/api/events");
@@ -116,7 +116,7 @@ const EventsPage = () => {
     <div className="p-4 pt-20 relative">
       <h1 className="text-5xl font-bold mb-2 pl-5 pt-2 text-center">Events</h1>
       <div className="flex justify-end">
-        {isAdmin && (
+        {isLoggedIn && (
           <button
             onClick={() => setShowForm(!showForm)} // Toggles the form visibility
             className="bg-blue-600 text-white py-2 px-4 rounded-md mb-4">
@@ -126,7 +126,7 @@ const EventsPage = () => {
       </div>
 
       {/* Event Form to Add New Event */}
-      {isAdmin && showForm && <EventForm />}
+      {isLoggedIn && showForm && <EventForm />}
 
       {/* Displaying the Events */}
       <div className="mt-2">
@@ -140,7 +140,7 @@ const EventsPage = () => {
               <EventCard
                 key={event.id}
                 event={event}
-                isAdminLoggedIn={isAdmin}
+                isLoggedInLoggedIn={isLoggedIn}
                 onDelete={() => deleteEvent(event.id, event)}
                 onSelect={handleEventSelect}
               />
@@ -161,7 +161,7 @@ const EventsPage = () => {
             <EventCard
               key={event.id}
               event={event}
-              isAdminLoggedIn={isAdmin}
+              isLoggedInLoggedIn={isLoggedIn}
               onDelete={() => deleteEvent(event.id, event)}
               onSelect={handleEventSelect}
             />
@@ -181,7 +181,7 @@ const EventsPage = () => {
       )}
 
       {/* Event Update Form */}
-      {isAdmin && selectedEvent && (
+      {isLoggedIn && selectedEvent && (
         <div className="mt-8 z-50">
           <h2 className="text-2xl font-bold mb-4">Update Event</h2>
           <EventUpdateForm

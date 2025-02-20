@@ -25,7 +25,7 @@ export default function AchievementsPage() {
   const [newAchievement, setNewAchievement] = useState<Partial<Achiever>>({
     achievements: [""],
   });
-  const { isAdmin , setAdmin } = useStore();
+  const { isLoggedIn , setLoggedIn } = useStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editAchievements, setEditAchievements] = useState<Partial<Achiever>>({
@@ -36,15 +36,15 @@ export default function AchievementsPage() {
     onAuthStateChanged(auth, async (user) => {
       try {
         if (user) {
-          setAdmin(true);
+          setLoggedIn(true);
         } else {
-          setAdmin(false);
+          setLoggedIn(false);
         }
       } catch (error) {
         console.log("Error getting document:", error);
       }
     });
-  }, [isAdmin]);
+  }, [isLoggedIn]);
 
 
   useEffect(() => {
@@ -183,7 +183,7 @@ export default function AchievementsPage() {
           </div>
         ))}
       </div>
-      {isAdmin ? (
+      {isLoggedIn ? (
         <div className="text-center mb-8">
           <button
             onClick={() => setIsModalOpen(true)}
@@ -392,7 +392,7 @@ export default function AchievementsPage() {
         </div>
       )}
 
-      {isAdmin ? (
+      {isLoggedIn ? (
         <div className="text-center mb-8">
           <button
             onClick={() => setIsEditModalOpen(true)}

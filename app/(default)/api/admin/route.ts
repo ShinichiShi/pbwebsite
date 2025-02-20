@@ -30,7 +30,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
  *                 message:
  *                   type: string
  *                   example: "User is an admin"
- *                 isAdmin:
+ *                 isLoggedIn:
  *                   type: boolean
  *                   example: true
  *       400:
@@ -53,7 +53,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
  *                 error:
  *                   type: string
  *                   example: "User is not an admin"
- *                 isAdmin:
+ *                 isLoggedIn:
  *                   type: boolean
  *                   example: false
  *       500:
@@ -153,12 +153,12 @@ export async function GET(request: Request) {
 
     if (!adminDocSnap.exists()) {
       return NextResponse.json(
-        { error: "User is not an admin", isAdmin: false },
+        { error: "User is not an admin", isLoggedIn: false },
         { status: 403 },
       );
     } else {
       return NextResponse.json(
-        { message: "User is an admin", isAdmin: true },
+        { message: "User is an admin", isLoggedIn: true },
         { status: 200 },
       );
     }

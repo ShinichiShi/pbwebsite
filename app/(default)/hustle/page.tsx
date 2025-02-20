@@ -16,12 +16,12 @@ interface Result {
 
 export default function ResultsTable() {
   const [tab, setTab] = useState<"latest" | "rankings">("latest");
-  // const [isAdmin, setIsAdmin] = useState(false);
+  // const [isLoggedIn, setLoggedIn] = useState(false);
   const [latestResults, setLatestResults] = useState<Result[]>([]);
   const [rankings, setRankings] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const { isAdmin , setAdmin } = useStore();
+  // const [isLoggedInLoggedIn, setLoggedInLoggedIn] = useState(false);
+  const { isLoggedIn , setLoggedIn } = useStore();
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -58,26 +58,26 @@ export default function ResultsTable() {
     // const checkAdmin = async (uid: string) => {
     //   try {
     //     const response = await fetch(`/api/admin?uid=${uid}`);
-    //     const { isAdmin } = await response.json();
-    //     setAdmin(isAdmin);
+    //     const { isLoggedIn } = await response.json();
+    //     setLoggedIn(isLoggedIn);
     //   } catch (error) {
     //     console.error("Error checking admin status:", error);
-    //     setAdmin(false);
+    //     setLoggedIn(false);
     //   }
     // };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setAdmin(true);
+        setLoggedIn(true);
       } else {
-        setAdmin(false);
+        setLoggedIn(false);
       }
     });
 
     fetchData();
 
     return () => unsubscribe();
-  }, [isAdmin]);
+  }, [isLoggedIn]);
 
   const handleGetResults = async () => {
     try {
@@ -166,7 +166,7 @@ export default function ResultsTable() {
             </button>
           ))}
         </div>
-        {isAdmin && isAdmin && tab === "latest" && (
+        {isLoggedIn && isLoggedIn && tab === "latest" && (
           <div className="flex justify-center mb-4">
             <motion.button
               whileHover={{ scale: 1.05 }}

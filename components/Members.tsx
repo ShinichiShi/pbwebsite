@@ -57,21 +57,21 @@ export default function Members() {
     setOpenIndex(openIndex === index ? -1 : index);
   };
 
-  const { isAdmin, setAdmin } = useStore();
+  const { isLoggedIn, setLoggedIn } = useStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       try {
         if (user) {
-          setAdmin(true);
+          setLoggedIn(true);
         } else {
-          setAdmin(false);
+          setLoggedIn(false);
         }
       } catch (error) {
         console.log("Error getting document:", error);
       }
     });
-  }, [isAdmin]);
+  }, [isLoggedIn]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -352,7 +352,7 @@ export default function Members() {
                             imageUrl={profile.imageUrl || ""}
                           />
                           <div className="absolute top-2 right-2">
-                            {isAdmin ? (
+                            {isLoggedIn ? (
                               <button
                                 onClick={() => toggleMenu(profile.id || "")}
                                 className="bg-gray-800
@@ -393,7 +393,7 @@ export default function Members() {
           </div>
         )}
 
-        {isAdmin ? (
+        {isLoggedIn ? (
           <div className="flex justify-center mt-8">
             <button
               className="px-4 py-2 bg-green-600 text-white rounded-md"
