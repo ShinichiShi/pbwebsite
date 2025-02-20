@@ -31,21 +31,21 @@ const Login = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const userEmail = result.user.email;
-      if (!userEmail?.endsWith("@pointblank.club")) {
-        setError("Access not granted!");
-        await auth.signOut();
-        return;
-      } 
-      router.push("/"); // Redirect to a home-page after successful login
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in with Google");
-      console.error(error);
-    }
-  };
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const result = await signInWithPopup(auth, googleProvider);
+  //     const userEmail = result.user.email;
+  //     if (!userEmail?.endsWith("@pointblank.club")) {
+  //       setError("Access not granted!");
+  //       await auth.signOut();
+  //       return;
+  //     } 
+  //     router.push("/"); // Redirect to a home-page after successful login
+  //   } catch (error: any) {
+  //     setError(error.message || "Failed to sign in with Google");
+  //     console.error(error);
+  //   }
+  // };
 
   const handlePasswordReset = async () => {
     if (!email) {
@@ -118,7 +118,7 @@ const Login = () => {
             Login
           </button>
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <button
             type="button"
             onClick={handleGoogleSignIn}
@@ -133,7 +133,7 @@ const Login = () => {
             />
             Sign in with Google
           </button>
-        </div>
+        </div> */}
         {error && <p className="text-red-500">{error}</p>}
         {resetMessage && <p className="text-green-500">{resetMessage}</p>}
       </form>
