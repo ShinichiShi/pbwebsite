@@ -141,17 +141,7 @@ export default function Header() {
                     </p>
                   </button>
                 ) : (
-                  <Link href="/login">
-                    <p
-                      className={`font-medium ${
-                        pathname === "/login"
-                          ? "font-extrabold text-white"
-                          : "text-gray-300"
-                      } hover:text-white px-2 lg:px-5 py-3 flex items-center transition duration-150 ease-in-out`}
-                    >
-                      Login
-                    </p>
-                  </Link>
+          <></>        
                 )}
               </li>
             </ul>
