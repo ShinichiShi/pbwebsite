@@ -26,6 +26,7 @@ const Signup = () => {
 
       if (!email.endsWith("@pointblank.club")) {
         setSignupError("Access not granted!");
+        return;
       }    
   
       if (password !== confirmPassword) {
@@ -67,7 +68,7 @@ const Signup = () => {
           setSuccess('Successfully signed up!');
           window.location.reload(); // Redirect to login page after successful signup
 
-          
+
         // }
       } catch (signupErr: any) {
         setSignupError(signupErr.message || 'Failed to sign up');

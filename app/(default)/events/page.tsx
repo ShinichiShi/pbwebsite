@@ -1,17 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "../../../Firebase"; 
+import { auth } from "../../../Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import EventForm from "../../../components/EventForm";
 import EventUpdateForm from "../../../components/EventUpdateForm";
 import EventCard from "../../../components/EventCard";
-import Sidebar from "../../../components/Sidebar"; 
-import { useStore} from "@/lib/zustand/store";
+import Sidebar from "../../../components/Sidebar";
+import { useStore } from "@/lib/zustand/store";
 
 const EventsPage = () => {
-  const [showForm, setShowForm] = useState(false); 
-  const { isAdmin , setAdmin } = useStore();
+  const [showForm, setShowForm] = useState(false);
+  const { isAdmin, setAdmin } = useStore();
   const [events, setEvents] = useState<
     {
       id: string;
@@ -21,7 +21,7 @@ const EventsPage = () => {
       lastDateOfRegistration: string;
       dateCreated: string;
       dateModified: string;
-      imageURL: string; 
+      imageURL: string;
       registrationLink: string;
     }[]
   >([]);
@@ -36,54 +36,48 @@ const EventsPage = () => {
     dateModified: string;
     imageURL: string;
     registrationLink: string;
-  } | null>(null); 
+  } | null>(null);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        console.log(user.uid)
-        try {
-          const resp = await fetch(`/api/admin?uid=${uid}`);
-          const data = await resp.json();
-          console.log(data);
-          if (data.isAdmin) {
-            setAdmin(true);
-          }  else {
-            setAdmin(false);
-          }
-          console.log(isAdmin);
-        } catch (error) {
-          console.log("Error getting document:", error);
+      try {
+        if (user) {
+          setAdmin(true);
+        } else {
+          setAdmin(false);
         }
+      } catch (error) {
+        console.log("Error getting document:", error);
       }
     });
   }, [isAdmin]);
 
   const fetchEvents = async () => {
-    const resp = await fetch("/api/events"); 
+    const resp = await fetch("/api/events");
     const data = await resp.json();
     const eventsList = data.events;
     setEvents(eventsList);
   };
 
-  useEffect(() => {  
+  useEffect(() => {
     fetchEvents();
   }, []);
 
   // Deleting an event
-  const deleteEvent = async (eventId: string , event : any) => {
+  const deleteEvent = async (eventId: string, event: any) => {
     try {
       await fetch(`/api/events/?eventid=${eventId}`, {
         method: "DELETE",
       });
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.id !== eventId)
+      );
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
-    fetchEvents(); 
+    fetchEvents();
   };
 
   const handleEventSelect = (event: {
@@ -125,8 +119,7 @@ const EventsPage = () => {
         {isAdmin && (
           <button
             onClick={() => setShowForm(!showForm)} // Toggles the form visibility
-            className="bg-blue-600 text-white py-2 px-4 rounded-md mb-4"
-          >
+            className="bg-blue-600 text-white py-2 px-4 rounded-md mb-4">
             Add Event
           </button>
         )}
@@ -138,7 +131,6 @@ const EventsPage = () => {
       {/* Displaying the Events */}
       <div className="mt-2">
         {/* Present Events */}
-        
 
         {/* Future Events */}
         {/* <h2 className="text-2xl font-bold mb-4 mt-8">CurreEvents</h2> */}
@@ -149,7 +141,7 @@ const EventsPage = () => {
                 key={event.id}
                 event={event}
                 isAdminLoggedIn={isAdmin}
-              onDelete={() => deleteEvent(event.id , event)} 
+                onDelete={() => deleteEvent(event.id, event)}
                 onSelect={handleEventSelect}
               />
             ))}
@@ -160,7 +152,9 @@ const EventsPage = () => {
       </div>
 
       {/* Past Events */}
-      <h2 className="text-3xl font-bold mb-8 mt-16 ml-4 text-center">Past Events</h2>
+      <h2 className="text-3xl font-bold mb-8 mt-16 ml-4 text-center">
+        Past Events
+      </h2>
       {pastEvents.length > 0 ? (
         <div className="sm:flex flex-wrap justify-around gap-4 px-4">
           {pastEvents.map((event) => (
@@ -168,8 +162,8 @@ const EventsPage = () => {
               key={event.id}
               event={event}
               isAdminLoggedIn={isAdmin}
-              onDelete={() => deleteEvent(event.id , event)} 
-              onSelect={handleEventSelect} 
+              onDelete={() => deleteEvent(event.id, event)}
+              onSelect={handleEventSelect}
             />
           ))}
         </div>

@@ -40,19 +40,14 @@ const Leads: React.FC = () => {
   };
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        try {
-          const resp = await fetch(`/api/admin?uid=${uid}`);
-          const data = await resp.json();
-          if (data.isAdmin) {
-            setAdmin(true);
-          } else {
-            setAdmin(false);
-          }
-        } catch (error) {
-          console.log("Error getting document:", error);
+      try {
+        if (user) {
+          setAdmin(true);
+        } else {
+          setAdmin(false);
         }
+      } catch (error) {
+        console.log("Error getting document:", error);
       }
     });
   }, [isAdmin]);

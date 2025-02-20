@@ -55,20 +55,20 @@ export default function ResultsTable() {
       }
     };
 
-    const checkAdmin = async (uid: string) => {
-      try {
-        const response = await fetch(`/api/admin?uid=${uid}`);
-        const { isAdmin } = await response.json();
-        setAdmin(isAdmin);
-      } catch (error) {
-        console.error("Error checking admin status:", error);
-        setAdmin(false);
-      }
-    };
+    // const checkAdmin = async (uid: string) => {
+    //   try {
+    //     const response = await fetch(`/api/admin?uid=${uid}`);
+    //     const { isAdmin } = await response.json();
+    //     setAdmin(isAdmin);
+    //   } catch (error) {
+    //     console.error("Error checking admin status:", error);
+    //     setAdmin(false);
+    //   }
+    // };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        checkAdmin(user.uid);
+        setAdmin(true);
       } else {
         setAdmin(false);
       }
@@ -77,7 +77,7 @@ export default function ResultsTable() {
     fetchData();
 
     return () => unsubscribe();
-  }, []);
+  }, [isAdmin]);
 
   const handleGetResults = async () => {
     try {
