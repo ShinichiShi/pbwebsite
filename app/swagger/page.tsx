@@ -43,7 +43,7 @@ export default function ApiDoc() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [setAdmin]);
 
   if (isLoading) {
     return (
