@@ -18,6 +18,10 @@ const Login = () => {
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!email.endsWith("@pointblank.club")) {
+      setError("Access not granted!");
+      return;
+    } 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/"); // Redirect to a home-page after successful login
@@ -29,7 +33,13 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const userEmail = result.user.email;
+      if (!userEmail?.endsWith("@pointblank.club")) {
+        setError("Access not granted!");
+        await auth.signOut();
+        return;
+      } 
       router.push("/"); // Redirect to a home-page after successful login
     } catch (error: any) {
       setError(error.message || "Failed to sign in with Google");
