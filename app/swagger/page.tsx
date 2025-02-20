@@ -1,12 +1,12 @@
-'use client';
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/Firebase';
-import { useStore } from '@/lib/zustand/store';
-import 'swagger-ui-react/swagger-ui.css';
+"use client";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/Firebase";
+import "swagger-ui-react/swagger-ui.css";
+import { useStore } from "@/lib/zustand/store";
 
-const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
+const SwaggerUI = dynamic(() => import("swagger-ui-react"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center min-h-screen">
@@ -16,7 +16,8 @@ const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
 });
 
 export default function ApiDoc() {
-  const { isAdmin, setAdmin } = useStore();
+  // const [isLoggedIn, setLoggedIn] = useState(false);
+  const { isLoggedIn, setLoggedIn } = useStore();
   const [isLoading, setIsLoading] = useState(true);
   const [swaggerConfig, setSwaggerConfig] = useState<any>(null);
 
@@ -25,15 +26,14 @@ export default function ApiDoc() {
       if (user) {
         const uid = user.uid;
         try {
-          const resp = await fetch(`/api/admin?uid=${uid}`);
-          const data = await resp.json();
-          if (data.isAdmin) {
-            setAdmin(true);
-            const docsResp = await fetch(`/api/docs?uid=${uid}`);
-            if (docsResp.ok) {
-              const swaggerData = await docsResp.json();
-              setSwaggerConfig(swaggerData);
-            }
+          setLoggedIn(true);
+          // Get the API docs with the user's UID as a query parameter
+          const docsResp = await fetch(`/api/docs?uid=${uid}`);
+          if (docsResp.ok) {
+            const swaggerData = await docsResp.json();
+            setSwaggerConfig(swaggerData);
+          } else {
+            setLoggedIn(false);
           }
         } catch (error) {
           console.log("Error getting document:", error);
@@ -43,7 +43,7 @@ export default function ApiDoc() {
     });
 
     return () => unsubscribe();
-  }, [setAdmin]);
+  }, [setLoggedIn]);
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ export default function ApiDoc() {
     );
   }
 
-  if (!isAdmin) {
+  if (!isLoggedIn) {
     return (
       <div className="flex items-center justify-center min-h-screen text-red-600">
         <p>Access Denied: Admin privileges required</p>

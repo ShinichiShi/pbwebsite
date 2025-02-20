@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import connectMongoDB from "@/lib/dbConnect";
 import Leadsmodel from "@/models/Leads";
+import { cloudinary } from '@/Cloudinary';
 
 // Interface for Lead
 interface Lead {
@@ -109,8 +110,6 @@ export async function POST(request: Request) {
       ...leadData,
     });
 
-    console.log("New lead instance:", newLead);
-
     const savedLead = await newLead.save();
     return NextResponse.json(savedLead, { status: 201 });
   } catch (error) {
@@ -150,7 +149,7 @@ export async function PUT(request: Request) {
     const id = searchParams.get("id");
     const user = await Leadsmodel.findOne({ id });
     const _id = user._id;
-    console.log(_id);
+    
     if (!id) {
       return NextResponse.json(
         { error: "Lead ID is required" },
@@ -169,7 +168,7 @@ export async function PUT(request: Request) {
       { ...leadData },
       { new: true }
     );
-    console.log(updatedLead);
+    
     if (!updatedLead) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
@@ -218,21 +217,52 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const deletedLead = await Leadsmodel.findOneAndDelete({ id });
-
+    const deletedLead = await Leadsmodel.findOne({ id });
+    
     if (!deletedLead) {
       return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ id }, { status: 200 });
-  } catch (error) {
-    console.error("Error deleting lead:", error);
+    // If there's an image URL, delete it from Cloudinary
+    if (deletedLead.imageURL) {
+      try {
+        // Extract public_id from the Cloudinary URL
+        const matches = deletedLead.imageURL.match(/\/v\d+\/(.+?)\./);
+        const publicId = matches ? matches[1] : null;
+
+        if (publicId) {
+          const result = await cloudinary.uploader.destroy(publicId);
+        } else {
+          console.warn('Could not extract public ID from URL:', deletedLead.imageURL);
+        }
+      } catch (cloudinaryError) {
+        console.error("Error deleting image from Cloudinary:", cloudinaryError);
+        // Log detailed error for debugging
+        if (cloudinaryError instanceof Error) {
+          console.error("Error details:", cloudinaryError.message);
+        }
+        // Continue with lead deletion even if image deletion fails
+      }
+    }
+
+    await Leadsmodel.deleteOne({ id });
     return NextResponse.json(
-      {
-        error: "An error occurred while deleting the lead",
-        details: (error as Error).message,
-      },
-      { status: 500 }
+      { message: "Lead deleted successfully" },
+      { status: 200 }
     );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error deleting lead:", error.message);
+      return NextResponse.json(
+        { error: "An error occurred while deleting the lead", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error("Unknown error:", error);
+      return NextResponse.json(
+        { error: "An unknown error occurred" },
+        { status: 500 }
+      );
+    }
   }
 }
