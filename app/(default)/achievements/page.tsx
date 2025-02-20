@@ -25,7 +25,7 @@ export default function AchievementsPage() {
   const [newAchievement, setNewAchievement] = useState<Partial<Achiever>>({
     achievements: [""],
   });
-  const { isAdmin , setAdmin } = useStore();
+  const { isLoggedIn , setLoggedIn } = useStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editAchievements, setEditAchievements] = useState<Partial<Achiever>>({
@@ -34,20 +34,17 @@ export default function AchievementsPage() {
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        try {
-          const resp = await fetch(`/api/admin?uid=${uid}`);
-          const data = await resp.json();
-          if (data.isAdmin) {
-            setAdmin(true);
-          }
-        } catch (error) {
-          console.log("Error getting document:", error);
+      try {
+        if (user) {
+          setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
         }
+      } catch (error) {
+        console.log("Error getting document:", error);
       }
     });
-  },[isAdmin]);
+  }, [isLoggedIn]);
 
 
   useEffect(() => {
@@ -186,7 +183,7 @@ export default function AchievementsPage() {
           </div>
         ))}
       </div>
-      {isAdmin ? (
+      {isLoggedIn ? (
         <div className="text-center mb-8">
           <button
             onClick={() => setIsModalOpen(true)}
@@ -395,7 +392,7 @@ export default function AchievementsPage() {
         </div>
       )}
 
-      {isAdmin ? (
+      {isLoggedIn ? (
         <div className="text-center mb-8">
           <button
             onClick={() => setIsEditModalOpen(true)}

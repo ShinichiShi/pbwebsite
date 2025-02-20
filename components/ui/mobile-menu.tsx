@@ -18,9 +18,11 @@ export default function MobileMenu() {
   const { reset } = useStore();
 
   const handleLogout = async () => {
+    
     await auth.signOut();
     setLoggedIn(false);
     reset();
+    
   }
 
   useEffect(() => {
@@ -135,11 +137,7 @@ export default function MobileMenu() {
                 </button>
               </li>
             ) : (
-              <li>
-                <Link href="/login" className="flex font-medium w-full text-gray-300 hover:text-white py-2 justify-center" onClick={() => setMobileNavOpen(false)}>
-                  Login
-                </Link>
-              </li>
+              <></>
             )}
           </ul>
         </Transition>
