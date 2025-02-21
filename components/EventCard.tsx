@@ -12,7 +12,7 @@ interface EventCardProps {
     imageURL: string;
     registrationLink: string;
   };
-  isAdminLoggedIn: boolean;
+  isLoggedInLoggedIn: boolean;
   onDelete: (eventId: string) => void;
   onSelect: (event: {
     id: string;
@@ -29,7 +29,7 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({
   event,
-  isAdminLoggedIn,
+  isLoggedInLoggedIn,
   onDelete,
   onSelect,
 }) => {
@@ -69,7 +69,7 @@ const EventCard: React.FC<EventCardProps> = ({
         </p>
 
         {/* Admin Options */}
-        {isAdminLoggedIn && (
+        {isLoggedInLoggedIn && (
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={(e) => {

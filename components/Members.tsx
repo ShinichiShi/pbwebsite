@@ -8,7 +8,6 @@ import { auth } from "@/Firebase";
 import Image from "next/image";
 import Card from "./ui/Card";
 import CollapsibleSection from "./ui/CollapsibleSection";
-import { useStoreMember } from "@/lib/zustand/store";
 import { useStore } from "@/lib/zustand/store";
 
 interface Member {
@@ -47,7 +46,7 @@ export default function Members() {
     imageUrl: "",
   });
 
-  const { image, setImage } = useStoreMember();
+  const { image, setImage } = useStore();
 
   const [menuVisible, setMenuVisible] = useState<{ [key: string]: boolean }>(
     {}
@@ -58,26 +57,21 @@ export default function Members() {
     setOpenIndex(openIndex === index ? -1 : index);
   };
 
-  // const [isAdmin, setIsAdmin] = useState(false);
-  const { isAdmin, setAdmin } = useStore();
+  const { isLoggedIn, setLoggedIn } = useStore();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const uid = user.uid;
-        try {
-          const resp = await fetch(`/api/admin?uid=${uid}`);
-          const data = await resp.json();
-          if (data.isAdmin) {
-            setAdmin(true);
-          }
-        } catch (error) {
-          console.log("Error getting document:", error);
+      try {
+        if (user) {
+          setLoggedIn(true);
+        } else {
+          setLoggedIn(false);
         }
+      } catch (error) {
+        console.log("Error getting document:", error);
       }
     });
-  }),
-    [isAdmin];
+  }, [isLoggedIn]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -358,7 +352,7 @@ export default function Members() {
                             imageUrl={profile.imageUrl || ""}
                           />
                           <div className="absolute top-2 right-2">
-                            {isAdmin ? (
+                            {isLoggedIn ? (
                               <button
                                 onClick={() => toggleMenu(profile.id || "")}
                                 className="bg-gray-800
@@ -399,7 +393,7 @@ export default function Members() {
           </div>
         )}
 
-        {isAdmin ? (
+        {isLoggedIn ? (
           <div className="flex justify-center mt-8">
             <button
               className="px-4 py-2 bg-green-600 text-white rounded-md"
