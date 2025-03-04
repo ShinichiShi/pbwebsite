@@ -62,21 +62,16 @@ export default function AchievementsPage() {
         }
         
         const data = await response.json();
+        console.log(data.data);
         
         // Ensure data is an array and validate each achiever
-        const validAchievers = (Array.isArray(data) ? data : []).filter(achiever => {
-          // Strict validation of each achiever object
-          return achiever && 
-                 typeof achiever.email === 'string' && 
-                 typeof achiever.name === 'string' &&
-                 Array.isArray(achiever.achievements);
-        });
+        // const validAchievers = (Array.isArray(data) ? data : [])
 
-        setAchievers(validAchievers.length > 0 ? validAchievers : []);
+        setAchievers(data.data);
         
-        if (validAchievers.length === 0) {
-          toast.success("No achievements found");
-        }
+        // if (validAchievers.length === 0) {
+        //   toast.success("No achievements found");
+        // }
       } catch (error) {
         console.error("Error fetching achievements:", error);
         toast.error("Failed to fetch achievements");
