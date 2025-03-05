@@ -52,8 +52,6 @@
     "react-spinners": "^0.14.1",
     "react-spring": "^9.7.4",
     "sharp": "^0.33.5",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-dist": "^5.18.3",
     "swagger-ui-react": "^5.18.3",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
