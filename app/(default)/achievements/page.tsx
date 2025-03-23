@@ -34,6 +34,8 @@ export default function AchievementsPage() {
   const [editAchievements, setEditAchievements] = useState<Partial<Achiever>>({
     achievements: [""],
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteConfirmName, setDeleteConfirmName] = useState("");
 
   // Strict auth state change handler
   useEffect(() => {
@@ -119,7 +121,9 @@ export default function AchievementsPage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
     setEditName("");
+    setDeleteConfirmName("");
     setEditAchievements({ achievements: [""] });
   };
 
@@ -165,8 +169,8 @@ export default function AchievementsPage() {
       const response = await axios.post("/api/achievements", formData);
       
       // Validate response data
-      if (response.data && response.data.name) {
-        setAchievers(prev => [...prev, response.data]);
+      if (response.data && response.data.data) {
+        setAchievers(prev => [...prev, response.data.data]);
         setIsModalOpen(false);
         toast.success("Achievement added successfully");
       } else {
@@ -190,12 +194,13 @@ export default function AchievementsPage() {
     try {
       const response = await axios.get(`/api/achievements?name=${encodeURIComponent(editName)}`);
       
-      if (!response.data || response.data.length === 0) {
+      // The API returns { message, data } where data is the array of members
+      if (!response.data.data || response.data.data.length === 0) {
         toast.error("No user found");
         return;
       }
 
-      const user = response.data[0];
+      const user = response.data.data[0]; // Access the first item in the data array
       setEditAchievements({
         ...user,
         achievements: user.achievements || [""]
@@ -211,28 +216,93 @@ export default function AchievementsPage() {
     const updatedAchievements =
       editAchievements.achievements?.filter((ach) => ach.trim() !== "") || [];
     if (updatedAchievements.length === 0) {
+      toast.error("Please add at least one achievement");
       return;
     }
     try {
       const formData = new FormData();
       formData.append("name", editName);
-      formData.append("email", editAchievements.email || "");
-      formData.append("batch", String(editAchievements.batch || ""));
-      formData.append("portfolio", editAchievements.portfolio || "");
-      formData.append("internship", editAchievements.internship || "");
-      formData.append(
-        "companyPosition",
-        editAchievements.companyPosition || ""
-      );
+
+      // Include existing data for required fields
+      if (editAchievements.email) {
+        formData.append("email", editAchievements.email);
+      }
+      if (editAchievements.batch) {
+        formData.append("batch", String(editAchievements.batch));
+      }
+      if (editAchievements.portfolio) {
+        formData.append("portfolio", editAchievements.portfolio);
+      }
+      if (editAchievements.internship) {
+        formData.append("internship", editAchievements.internship);
+      }
+      if (editAchievements.companyPosition) {
+        formData.append("companyPosition", editAchievements.companyPosition);
+      }
+      
       formData.append("achievements", JSON.stringify(updatedAchievements));
-      if (editAchievements.image) {
+      
+      // Only include the image if it's a new upload
+      if (editAchievements.image instanceof File) {
         formData.append("image", editAchievements.image);
       }
-
+  
+      console.log("Submitting edit form...");
       const response = await axios.put("/api/achievements", formData);
-      setIsEditModalOpen(false);
+      
+      if (response.data && response.data.data) {
+        // Update the achievers list with the edited data
+        setAchievers(prev => 
+          prev.map(achiever => 
+            achiever.name === editName ? response.data.data : achiever
+          )
+        );
+        setIsEditModalOpen(false);
+        toast.success("Achievement updated successfully");
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
       console.error("Error updating achievements:", error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        const errorDetails = error.response.data?.details || error.response.data?.error || error.message;
+        toast.error(`Update failed: ${errorDetails}`);
+      } else {
+        toast.error("Failed to update achievement. Please try again.");
+      }
+    }
+  };
+
+  const handleDeleteSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!deleteConfirmName || deleteConfirmName.trim() === "") {
+      toast.error("Please enter a name to confirm deletion");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`/api/achievements?name=${encodeURIComponent(deleteConfirmName)}`);
+      
+      if (response.data && response.data.message) {
+        // Remove the deleted item from the achievements list
+        setAchievers(prev => prev.filter(achiever => achiever.name !== deleteConfirmName));
+        setIsDeleteModalOpen(false);
+        setDeleteConfirmName("");
+        toast.success("Achievement deleted successfully");
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (error) {
+      console.error("Error deleting achievement:", error);
+      
+      if (axios.isAxiosError(error) && error.response) {
+        const errorDetails = error.response.data?.details || error.response.data?.error || error.message;
+        toast.error(`Deletion failed: ${errorDetails}`);
+      } else {
+        toast.error("Failed to delete achievement. Please try again.");
+      }
     }
   };
 
@@ -259,12 +329,24 @@ export default function AchievementsPage() {
       )}
 
       {isLoggedIn ? (
-        <div className="text-center mb-8">
+        <div className="text-center my-8 space-y-4">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-white text-black py-2 px-4 rounded shadow-lg"
+            className="bg-white text-black py-2 px-4 rounded shadow-lg mx-2"
           >
             Add Achievements
+          </button>
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="bg-white text-black py-2 px-4 rounded shadow-lg mx-2"
+          >
+            Edit Achievements
+          </button>
+          <button
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="bg-red-500 text-white py-2 px-4 rounded shadow-lg mx-2"
+          >
+            Delete Achievement
           </button>
         </div>
       ) : null}
@@ -467,17 +549,6 @@ export default function AchievementsPage() {
         </div>
       )}
 
-      {isLoggedIn ? (
-        <div className="text-center mb-8">
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="bg-white text-black py-2 px-4 rounded shadow-lg"
-          >
-            Edit Achievements
-          </button>
-        </div>
-      ) : null}
-
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
           <div className="bg-black text-white p-8 rounded-lg w-full max-w-md">
@@ -537,6 +608,35 @@ export default function AchievementsPage() {
                   />
                 </div>
                 <div className="mb-4">
+                  <label className="block mb-2">Update Image:</label>
+                  {editAchievements.imageUrl && (
+                    <div className="mb-2">
+                      <img 
+                        src={editAchievements.imageUrl} 
+                        alt={editAchievements.name} 
+                        className="w-20 h-20 object-cover rounded-full mb-2"
+                      />
+                      <p className="text-xs text-gray-400">Current image</p>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png, image/jpg"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setEditAchievements((prev) => ({
+                          ...prev,
+                          image: file,
+                          imageUrl: URL.createObjectURL(file),
+                        }));
+                      }
+                    }}
+                    className="w-full p-3 bg-gray-800 rounded"
+                  />
+                </div>
+                <div className="mb-4">
                   <label className="block mb-2">Achievements:</label>
                   {editAchievements.achievements?.map((achievement, index) => (
                     <div key={index} className="mb-2">
@@ -565,7 +665,7 @@ export default function AchievementsPage() {
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded"
                   >
-                    Edit
+                    Update
                   </button>
                   <button
                     type="button"
@@ -577,6 +677,51 @@ export default function AchievementsPage() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+          <div className="bg-black text-white p-8 rounded-lg w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-6">Delete Achievement</h2>
+            <form
+              className="space-y-6"
+              onSubmit={handleDeleteSubmit}
+            >
+              <div className="mb-4">
+                <label className="block mb-2">
+                  Enter name to confirm deletion:
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmName}
+                  onChange={(e) => setDeleteConfirmName(e.target.value)}
+                  className="w-full p-3 bg-gray-800 rounded"
+                  placeholder="Enter exact name to delete"
+                />
+              </div>
+              <div className="p-4 bg-red-900 bg-opacity-50 rounded-md mb-4">
+                <p className="text-red-300">
+                  Warning: This action cannot be undone. This will permanently delete the achievement record.
+                </p>
+              </div>
+              <div className="flex gap-4 mt-4">
+                <button
+                  type="submit"
+                  className="bg-red-600 text-white py-2 px-4 rounded"
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
