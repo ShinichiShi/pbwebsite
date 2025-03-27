@@ -246,7 +246,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     // Comprehensive input validation
-    const requiredFields = ['name', 'email', 'batch', 'achievements', 'image'];
+    const requiredFields = ['email', 'name', 'batch', 'achievements', 'image'];
     for (const field of requiredFields) {
       if (!formData.get(field)) {
         return NextResponse.json(
@@ -268,13 +268,13 @@ export async function POST(request: Request) {
     ) as string[];
     const image: File | null = formData.get("image") as File;
 
-    // Check if a person with the same name already exists in MongoDB
-    const existingMember = await Achievementmodel.findOne({ name });
+    // Check if a person with the same email already exists in MongoDB
+    const existingMember = await Achievementmodel.findOne({ email });
     if (existingMember) {
       return NextResponse.json(
         { 
           error: 'Duplicate Entry', 
-          details: `A member with the name ${name} already exists.` 
+          details: `A member with the email ${email} already exists.` 
         },
         { status: 409 }
       );
@@ -304,7 +304,7 @@ export async function POST(request: Request) {
       const uploadResult: UploadApiResponse = await new Promise(
         (resolve, reject) => {
           const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "achievements", public_id: name },
+            { folder: "achievements", public_id: email },
             (error, result) => {
               if (error || !result) {
                 reject(error || new Error('Upload to Cloudinary failed'));
@@ -371,7 +371,7 @@ export async function POST(request: Request) {
   }
 }
 
-// GET method: Fetch achievements based on name or fetch all if no name is provided
+// GET method: Fetch achievements based on email or fetch all if no email is provided
 export async function GET(request: NextRequest) {
   try {
     // Validate request method
@@ -384,19 +384,21 @@ export async function GET(request: NextRequest) {
 
     await connectMongoDB();
     const { searchParams } = new URL(request.url);
-    const name = searchParams.get("name");
+    const email = searchParams.get("email");
+
+    console.log("Received email in GET method:", email);
 
     let querySnapshot;
     try {
-      if (name) {
-        querySnapshot = await Achievementmodel.find({ name });
+      if (email) {
+        querySnapshot = await Achievementmodel.find({ email });
         
         // Handle case when no member is found
         if (querySnapshot.length === 0) {
           return NextResponse.json(
             { 
               error: 'Not Found', 
-              details: `No member found with name: ${name}` 
+              details: `No member found with email: ${email}` 
             },
             { status: 404 }
           );
@@ -445,7 +447,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PUT method: Update an existing achievement based on name
+// PUT method: Update an existing achievement based on email
 export async function PUT(request: Request) {
   try {
     // Validate request method
@@ -458,26 +460,28 @@ export async function PUT(request: Request) {
 
     await connectMongoDB();
     const formData = await request.formData();
-    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
 
-    // Validate name is provided
-    if (!name) {
+    console.log("Received email in PUT method:", email);
+    
+    // Validate email is provided
+    if (!email) {
       return NextResponse.json(
         { 
           error: 'Validation Failed', 
-          details: 'Name is required for updating a member' 
+          details: 'Email is required for updating a member' 
         },
         { status: 400 }
       );
     }
 
-    // Fetch the existing document by name
-    const existingMember = await Achievementmodel.findOne({ name });
+    // Fetch the existing document by email
+    const existingMember = await Achievementmodel.findOne({ email });
     if (!existingMember) {
       return NextResponse.json(
         { 
           error: 'Not Found', 
-          details: `No member found with the name ${name}` 
+          details: `No member found with the email ${email}` 
         },
         { status: 404 }
       );
@@ -493,7 +497,7 @@ export async function PUT(request: Request) {
     };
     
     // Only add fields that are provided in the form data
-    if (formData.get("email")) updateData.email = formData.get("email") as string;
+    if (formData.get("name")) updateData.name = formData.get("name") as string;
     if (formData.get("batch")) updateData.batch = formData.get("batch") as string;
     if (formData.get("portfolio")) updateData.portfolio = formData.get("portfolio") as string;
     if (formData.get("internship")) updateData.internship = formData.get("internship") as string;
@@ -515,7 +519,7 @@ export async function PUT(request: Request) {
         const uploadResult: UploadApiResponse = await new Promise(
           (resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
-              { folder: "achievements", public_id: name },
+              { folder: "achievements", public_id: email },
               (error, result) => {
                 if (error || !result) {
                   reject(error || new Error('Cloudinary upload failed'));
@@ -544,7 +548,7 @@ export async function PUT(request: Request) {
     // Use findOneAndUpdate with { new: true, runValidators: false }
     try {
       const updatedMember = await Achievementmodel.findOneAndUpdate(
-        { name },
+        { email },
         { $set: updateData },
         { new: true, runValidators: false }
       );
@@ -584,7 +588,7 @@ export async function PUT(request: Request) {
   }
 }
 
-// DELETE method: Delete an achievement based on name
+// DELETE method: Delete an achievement based on email
 export async function DELETE(request: NextRequest) {
   try {
     // Validate request method
@@ -597,28 +601,28 @@ export async function DELETE(request: NextRequest) {
 
     await connectMongoDB();
     
-    // Get name from query parameters
+    // Get email from query parameters
     const { searchParams } = new URL(request.url);
-    const name = searchParams.get("name");
+    const email = searchParams.get("email");
 
-    // Validate name is provided
-    if (!name) {
+    // Validate email is provided
+    if (!email) {
       return NextResponse.json(
         { 
           error: 'Validation Failed', 
-          details: 'Name is required for deleting a member' 
+          details: 'Email is required for deleting a member' 
         },
         { status: 400 }
       );
     }
 
     // Find the member to be deleted
-    const existingMember = await Achievementmodel.findOne({ name });
+    const existingMember = await Achievementmodel.findOne({ email });
     if (!existingMember) {
       return NextResponse.json(
         { 
           error: 'Not Found', 
-          details: `No member found with the name ${name}` 
+          details: `No member found with the email ${email}` 
         },
         { status: 404 }
       );
@@ -630,7 +634,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the document from MongoDB
     try {
-      const deleteResult = await Achievementmodel.deleteOne({ name });
+      const deleteResult = await Achievementmodel.deleteOne({ email });
       
       if (deleteResult.deletedCount === 0) {
         return NextResponse.json(
@@ -645,7 +649,7 @@ export async function DELETE(request: NextRequest) {
       // Delete image from Cloudinary if exists
       if (publicId) {
         try {
-          await cloudinary.uploader.destroy(`achievements/${name}`);
+          await cloudinary.uploader.destroy(`achievements/${email}`);
         } catch (cloudinaryError) {
           // Continue even if Cloudinary delete fails
         }
@@ -654,7 +658,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { 
           message: 'Member Deleted Successfully', 
-          name: name 
+          email: email 
         },
         { status: 200 }
       );

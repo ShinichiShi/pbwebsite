@@ -30,12 +30,12 @@ export default function AchievementsPage() {
   });
   const { isLoggedIn , setLoggedIn } = useStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
   const [editAchievements, setEditAchievements] = useState<Partial<Achiever>>({
     achievements: [""],
   });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState("");
 
   // Strict auth state change handler
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function AchievementsPage() {
         
         // Ensure data is an array and validate each achiever
         // const validAchievers = (Array.isArray(data) ? data : [])
-
+        
         setAchievers(data.data);
         
         // if (validAchievers.length === 0) {
@@ -122,8 +122,8 @@ export default function AchievementsPage() {
     setIsModalOpen(false);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
-    setEditName("");
-    setDeleteConfirmName("");
+    setEditEmail("");
+    setDeleteConfirmEmail("");
     setEditAchievements({ achievements: [""] });
   };
 
@@ -186,13 +186,13 @@ export default function AchievementsPage() {
   const handleFetch = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!editName || editName.trim() === "") {
-      toast.error("Please enter a name");
+    if (!editEmail || editEmail.trim() === "") {
+      toast.error("Please enter an email");
       return;
     }
 
     try {
-      const response = await axios.get(`/api/achievements?name=${encodeURIComponent(editName)}`);
+      const response = await axios.get(`/api/achievements?email=${encodeURIComponent(editEmail)}`);
       
       // The API returns { message, data } where data is the array of members
       if (!response.data.data || response.data.data.length === 0) {
@@ -221,11 +221,13 @@ export default function AchievementsPage() {
     }
     try {
       const formData = new FormData();
-      formData.append("name", editName);
+      
+      // Always include email as the primary identifier
+      formData.append("email", editEmail);
 
-      // Include existing data for required fields
-      if (editAchievements.email) {
-        formData.append("email", editAchievements.email);
+      // Include existing data for additional fields
+      if (editAchievements.name) {
+        formData.append("name", editAchievements.name);
       }
       if (editAchievements.batch) {
         formData.append("batch", String(editAchievements.batch));
@@ -254,7 +256,7 @@ export default function AchievementsPage() {
         // Update the achievers list with the edited data
         setAchievers(prev => 
           prev.map(achiever => 
-            achiever.name === editName ? response.data.data : achiever
+            achiever.email === editEmail ? response.data.data : achiever
           )
         );
         setIsEditModalOpen(false);
@@ -277,19 +279,19 @@ export default function AchievementsPage() {
   const handleDeleteSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!deleteConfirmName || deleteConfirmName.trim() === "") {
-      toast.error("Please enter a name to confirm deletion");
+    if (!deleteConfirmEmail || deleteConfirmEmail.trim() === "") {
+      toast.error("Please enter an email to confirm deletion");
       return;
     }
 
     try {
-      const response = await axios.delete(`/api/achievements?name=${encodeURIComponent(deleteConfirmName)}`);
+      const response = await axios.delete(`/api/achievements?email=${encodeURIComponent(deleteConfirmEmail)}`);
       
       if (response.data && response.data.message) {
         // Remove the deleted item from the achievements list
-        setAchievers(prev => prev.filter(achiever => achiever.name !== deleteConfirmName));
+        setAchievers(prev => prev.filter(achiever => achiever.email !== deleteConfirmEmail));
         setIsDeleteModalOpen(false);
-        setDeleteConfirmName("");
+        setDeleteConfirmEmail("");
         toast.success("Achievement deleted successfully");
       } else {
         throw new Error("Invalid response from server");
@@ -558,15 +560,15 @@ export default function AchievementsPage() {
               onSubmit={handleFetch}
             >
               <div className="mb-4">
-                <label className="block mb-2">Name:</label>
+                <label className="block mb-2">Email:</label>
                 <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
                   className="w-full p-3 bg-gray-800 rounded"
-                  placeholder="Enter Name"
+                  placeholder="Enter Email"
                 />
               </div>
               <div className="flex gap-4 mt-4">
@@ -691,14 +693,14 @@ export default function AchievementsPage() {
             >
               <div className="mb-4">
                 <label className="block mb-2">
-                  Enter name to confirm deletion:
+                  Enter email to confirm deletion:
                 </label>
                 <input
-                  type="text"
-                  value={deleteConfirmName}
-                  onChange={(e) => setDeleteConfirmName(e.target.value)}
+                  type="email"
+                  value={deleteConfirmEmail}
+                  onChange={(e) => setDeleteConfirmEmail(e.target.value)}
                   className="w-full p-3 bg-gray-800 rounded"
-                  placeholder="Enter exact name to delete"
+                  placeholder="Enter email to delete"
                 />
               </div>
               <div className="p-4 bg-red-900 bg-opacity-50 rounded-md mb-4">
