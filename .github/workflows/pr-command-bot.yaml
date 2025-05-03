@@ -161,12 +161,10 @@ jobs:
 
               if (comment?.includes("/assign") && isPR && action === "created") {
                 try {
-                  let assignee = commenter; // Default to commenter
+                  let assignee = commenter; 
                   
-                  // Check if a specific username was mentioned
                   const assigneeParam = parseCommand(comment, "/assign");
                   if (assigneeParam && assigneeParam.startsWith("@")) {
-                    // Remove the @ symbol and get the username
                     assignee = assigneeParam.substring(1).trim();
                   }
                   
@@ -177,7 +175,6 @@ jobs:
                     reviewers: [assignee]
                   });
                   
-                  // Add a confirmation comment
                   await github.rest.issues.createComment({
                     owner: repoOwner,
                     repo: repoName,
