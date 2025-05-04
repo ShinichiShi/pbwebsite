@@ -110,10 +110,10 @@ jobs:
             async function requestReviews(reviewers) {
               const validReviewers = reviewers
                 .map(r => r.replace(/^@/, '').trim())
-                .filter(r => r);
+                .filter(r => r && r !== prAuthor);  // Filter out empty reviewers and PR author
 
               if (validReviewers.length === 0) {
-                throw new Error('No valid reviewers specified');
+                throw new Error('No valid reviewers specified or only author was specified');
               }
 
               await github.rest.pulls.requestReviewers({
@@ -132,7 +132,15 @@ jobs:
               if (comment?.includes("/cc") && action === "created") {
                 try {
                   const reviewers = comment.substring(3).trim().split(/[\s,]+/);
-                  await requestReviews(reviewers);
+                  const requestedReviewers = await requestReviews(reviewers);
+                  
+                  // Display success message with the list of requested reviewers
+                  await github.rest.issues.createComment({
+                    owner: repoOwner,
+                    repo: repoName,
+                    issue_number: prNumber,
+                    body: `✅ Review requested from: ${requestedReviewers.map(r => `@${r}`).join(', ')}`
+                  });
                 } catch (error) {
                   await github.rest.issues.createComment({
                     owner: repoOwner,
