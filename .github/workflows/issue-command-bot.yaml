@@ -157,6 +157,7 @@ jobs:
               }
 
               if (comment?.includes("/needs-triage")) {
+              // commenting hello world to find out why action fail
                 try {
                   await handleLabel("needs-triage", "d73a4a", "This issue needs triage");
                 } catch (error) {
