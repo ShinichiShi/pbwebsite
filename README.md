@@ -58,7 +58,7 @@ Use:
 ```bash
 infisical run -- npm run dev
 ```
-#### Tip: To simplify this process, you can create aliases for commonly used commands.** 
+#### Tip: To simplify this process, you can create aliases for commonly used commands. 
 ---
 
 ## **Contributing**  
@@ -145,7 +145,4 @@ Additionally, the PR Command Bot automatically processes:
 ## **Contact**  
 If you have any questions or need assistance, feel free to reach out to the maintainers.  
 
-Let's build something amazing! 🚀  
-
-
----  
+Let's build something amazing! 🚀
